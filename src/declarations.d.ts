@@ -1,0 +1,6 @@
+declare module "drizzle"
+// declare module "@types/prop-types"
+declare module "drizzle-react"
+declare module "drizzle-react-components"
+declare module "redux-logger"
+// declare module "*.json"

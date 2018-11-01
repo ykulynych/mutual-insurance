@@ -1,6 +1,5 @@
-export const ADD_DATA = "ADD_DATA"
+import actionCreatorFactory from 'typescript-fsa'
 
-export const addData = (data: string) => ({
-  type: ADD_DATA,
-  data,
-})
+const actionCreator = actionCreatorFactory()
+
+export const addData = actionCreator<string>('ADD_DATA')

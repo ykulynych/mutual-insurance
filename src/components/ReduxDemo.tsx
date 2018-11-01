@@ -1,5 +1,5 @@
-import * as React from "react"
-import { SFC } from "react"
+import * as React from 'react'
+import { SFC } from 'react'
 import {
   StyleRulesCallback,
   withStyles,
@@ -11,7 +11,7 @@ import {
   List,
   ListItem,
   ListItemText
-} from "@material-ui/core"
+} from '@material-ui/core'
 
 type Props = {
   dataArray: string[]
@@ -25,14 +25,14 @@ const ReduxDemo: SFC<AllProps> = ({ dataArray, addData, classes }) => {
   return (
     <Card className={classes.card}>
       <CardContent>
-        <Typography className={classes.title} color="textSecondary">
+        <Typography className={classes.title} color='textSecondary'>
           Redux demo
         </Typography>
-        <Typography variant="headline" component="h2">
+        <Typography variant='headline' component='h2'>
           Data:
         </Typography>
         <CardActions>
-          <Button size="small" onClick={addDateToDataArray} variant="raised">
+          <Button size='small' onClick={addDateToDataArray} variant='raised'>
             Add date
           </Button>
         </CardActions>
@@ -61,7 +61,7 @@ const styles: StyleRulesCallback = theme => ({
     marginBottom: 50,
   },
   progress: {
-    float: "right",
+    float: 'right',
     padding: 5,
   },
   title: {

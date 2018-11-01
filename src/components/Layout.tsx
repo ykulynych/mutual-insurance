@@ -1,14 +1,14 @@
-import * as React from "react"
-import { SFC } from "react"
-import { StyleRulesCallback, withStyles } from "@material-ui/core"
-import TopBar from "./TopBar"
+import * as React from 'react'
+import { SFC } from 'react'
+import { StyleRulesCallback, withStyles } from '@material-ui/core'
+import TopBar from './TopBar'
 
 type Props = { children: any }
 type AllProps = Props & { classes: StyleClassNames }
 
 const Layout: SFC<AllProps> = ({ classes, children }) => (
   <div className={classes.root}>
-    <TopBar title="dApp starter" />
+    <TopBar title='dApp starter' />
     <main className={classes.content}>{children}</main>
   </div>
 )
@@ -22,9 +22,9 @@ const styles: StyleRulesCallback = theme => ({
   root: {
     flexGrow: 1,
     zIndex: 1,
-    overflow: "hidden",
-    position: "relative",
-    display: "flex",
+    overflow: 'hidden',
+    position: 'relative',
+    display: 'flex',
   },
   content: {
     flexGrow: 1,

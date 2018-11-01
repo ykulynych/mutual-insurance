@@ -1,12 +1,6 @@
-export const ADD_HASH = "ADD_HASH"
-export const ADD_SELECTED_CONTENT = "ADD_SELECTED_CONTENT"
+import actionCreatorFactory from 'typescript-fsa'
 
-export const addHash = (hash: string) => ({
-  type: ADD_HASH,
-  hash,
-})
+const actionCreator = actionCreatorFactory()
 
-export const addSelectedContent = (content: any) => ({
-  type: ADD_SELECTED_CONTENT,
-  content,
-})
+export const addHash = actionCreator<string>('ADD_HASH')
+export const addSelectedContent = actionCreator<any>('ADD_SELECTED_CONTENT')

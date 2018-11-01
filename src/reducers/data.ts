@@ -1,14 +1,15 @@
-import { ADD_DATA } from "../actions/data"
+import { reducerWithInitialState } from 'typescript-fsa-reducers'
 
-const initialState = {
+import * as Actions from '../actions'
+
+const initData = (): any => ({
   dataArray: [],
-}
+})
 
-export const dataReducer = (state = initialState, action: any) => {
-  switch (action.type) {
-    case ADD_DATA:
-      return Object.assign({}, state, { dataArray: state.dataArray.concat(action.data) })
-    default:
-      return state
-  }
-}
+export default reducerWithInitialState<any>(
+  initData()
+)
+  .case(Actions.addData, (state, data) => ({
+    ...state,
+    dataArray: state.dataArray.concat(data)
+  }))

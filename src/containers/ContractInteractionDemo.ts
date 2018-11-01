@@ -1,5 +1,5 @@
-import { drizzleConnect } from "drizzle-react"
-import ContractInteractionDemo from "../components/ContractInteractionDemo"
+import { drizzleConnect } from 'drizzle-react'
+import ContractInteractionDemo from '../components/ContractInteractionDemo'
 
 const mapStateToProps = (state: any) => ({
   insuranceFundStatus: state.contracts.InsuranceFund,

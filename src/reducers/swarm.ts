@@ -1,21 +1,20 @@
-import { ADD_HASH, ADD_SELECTED_CONTENT } from "../actions/swarm"
+import { reducerWithInitialState } from 'typescript-fsa-reducers'
 
-const initialState = {
+import * as Actions from '../actions'
+
+const initData = (): any => ({
   hashes: [],
-  selectedContent: "",
-}
+  selectedContent: '',
+})
 
-export const swarmReducer = (state = initialState, action: any) => {
-  switch (action.type) {
-    case ADD_HASH:
-      return Object.assign({}, state, {
-        hashes: state.hashes.concat(action.hash),
-      })
-    case ADD_SELECTED_CONTENT:
-      return Object.assign({}, state, {
-        selectedContent: action.content,
-      })
-    default:
-      return state
-  }
-}
+export default reducerWithInitialState<any>(
+  initData()
+)
+  .case(Actions.addHash, (state, data) => ({
+    ...state,
+    hashes: state.hashes.concat(data)
+  }))
+  .case(Actions.addSelectedContent, (state, data) => ({
+    ...state,
+    selectedContent: data,
+  }))

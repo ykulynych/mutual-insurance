@@ -1,21 +1,23 @@
-import * as React from "react"
-import { SFC } from "react"
+import * as React from 'react'
+import { SFC } from 'react'
 
-import { DrizzleProvider } from "drizzle-react"
-import { LoadingContainer } from "drizzle-react-components"
-import ContractInteractionDemo from "./containers/ContractInteractionDemo"
-import store from "./store"
-import Layout from "./components/Layout"
-import drizzleOptions from "./drizzleOptions"
+import { DrizzleProvider } from 'drizzle-react'
+import { LoadingContainer } from 'drizzle-react-components'
+import ContractInteractionDemo from './containers/ContractInteractionDemo'
+import store from './store'
+import Layout from './components/Layout'
+import drizzleOptions from './drizzleOptions'
+import { Routes } from './pages/routes'
 
 const App: SFC = () => (
   <DrizzleProvider options={drizzleOptions} store={store}>
     <LoadingContainer>
       <Layout>
-        <header>
+        {/* <header>
           <h1>Demo</h1>
         </header>
-        <ContractInteractionDemo />
+        <ContractInteractionDemo /> */}
+        <Routes />
       </Layout>
     </LoadingContainer>
   </DrizzleProvider>

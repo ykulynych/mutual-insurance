@@ -1,5 +1,5 @@
-import * as React from "react"
-import { SFC } from "react"
+import * as React from 'react'
+import { SFC } from 'react'
 import {
   StyleRulesCallback,
   withStyles,
@@ -9,12 +9,12 @@ import {
   CardContent,
   CardActions,
   CircularProgress,
-} from "@material-ui/core"
-import { ContractData, ContractForm } from "drizzle-react-components"
-import * as User from "../contracts/User.json"
-import * as Policy from "../contracts/Policy.json"
+} from '@material-ui/core'
+import { ContractData, ContractForm } from 'drizzle-react-components'
+import * as User from '../contracts/User.json'
+import * as Policy from '../contracts/Policy.json'
 
-const NULL = "0x0000000000000000000000000000000000000000"
+const NULL = '0x0000000000000000000000000000000000000000'
 
 type Props = {
   insuranceFundStatus: any
@@ -31,7 +31,7 @@ const MutualInsuranceDemo: SFC<AllProps> = (
 
   // How to interact with contracts directly
   // const doSmth = () => contracts.User.methods.setProfileInfo(
-  //   "Yura", 10000, 0, 0, "0xa5b9d60f32436310afebcfda832817a68921beb782fabf7915cc0460b443116a"
+  //   'Yura', 10000, 0, 0, '0xa5b9d60f32436310afebcfda832817a68921beb782fabf7915cc0460b443116a'
   // ).send()
   const register = () => {
     contracts.UserRegistry.methods.register().send()
@@ -40,7 +40,7 @@ const MutualInsuranceDemo: SFC<AllProps> = (
     contracts.UserRegistry.methods.me().call().then((me: any) => {
         console.log(me)
         var contractConfig = {
-          contractName: "MyUserInstance",
+          contractName: 'MyUserInstance',
           web3Contract: new drizzle.web3.eth.Contract(User.abi, me, { from: account, data: User.deployedBytecode })
         }
         drizzle.addContract(contractConfig, [])
@@ -56,7 +56,7 @@ const MutualInsuranceDemo: SFC<AllProps> = (
     contracts.MyUserInstance.methods.getPolicy().call().then((policy: any) => {
       console.log(policy)
       var contractConfig = {
-        contractName: "MyPolicyInstance",
+        contractName: 'MyPolicyInstance',
         web3Contract: new drizzle.web3.eth.Contract(Policy.abi, policy, { from: account, data: Policy.deployedBytecode })
       }
       drizzle.addContract(contractConfig, [])
@@ -68,18 +68,18 @@ const MutualInsuranceDemo: SFC<AllProps> = (
   }
 
   const payPremium = () => {
-    contracts.MyUserInstance.methods.payPremium().send({ from: account, value: drizzle.web3.utils.toWei("1", "ether")})
+    contracts.MyUserInstance.methods.payPremium().send({ from: account, value: drizzle.web3.utils.toWei('1', 'ether')})
   }
 
   const setProfile = () => {
     contracts.MyUserInstance.methods.setProfileInfo(
-      "Yura", 10000, "Lviv", "male", "0xa5b9d60f32436310afebcfda832817a68921beb782fabf7915cc0460b443116a"
+      'Yura', 10000, 'Lviv', 'male', '0xa5b9d60f32436310afebcfda832817a68921beb782fabf7915cc0460b443116a'
     ).send()
   }
 
   const getProfile = () => {
     contracts.MyUserInstance.methods.getProfileInfo().call().then((info: any) => {
-      console.log("PROFILE_INFO", info)
+      console.log('PROFILE_INFO', info)
     })
   }
 
@@ -102,55 +102,55 @@ const MutualInsuranceDemo: SFC<AllProps> = (
   return (
     <Card className={classes.card}>
       <CardContent>
-        <Typography className={classes.title} color="textSecondary">
+        <Typography className={classes.title} color='textSecondary'>
           SimpleStorage - smart contract
         </Typography>
-        <Typography variant="headline" component="h2">
+        <Typography variant='headline' component='h2'>
           Value:
-          <ContractData contract="InsuranceFund" method="getFund" />
+          <ContractData contract='InsuranceFund' method='getFund' />
         </Typography>
 
         {/* <ContractForm
-          contract="SimpleStorage"
-          method="set"
-          labels={["Change the value"]}
+          contract='SimpleStorage'
+          method='set'
+          labels={['Change the value']}
         /> */}
       </CardContent>
-        <Button size="small" onClick={register} variant="raised">
+        <Button size='small' onClick={register} variant='raised'>
           Register
         </Button>
-        <Button size="small" onClick={createUserInstance} variant="raised">
+        <Button size='small' onClick={createUserInstance} variant='raised'>
           Create User Instance
         </Button>
-        <Button size="small" onClick={createPolicy} variant="raised">
+        <Button size='small' onClick={createPolicy} variant='raised'>
           Create Policy
         </Button>
-        <Button size="small" onClick={createPolicyInstance} variant="raised">
+        <Button size='small' onClick={createPolicyInstance} variant='raised'>
           Create Policy Instance
         </Button>
-        <Button size="small" onClick={cancelPolicy} variant="raised">
+        <Button size='small' onClick={cancelPolicy} variant='raised'>
           Cancel Policy
         </Button>
-        <Button size="small" onClick={getPolicyInfo} variant="raised">
+        <Button size='small' onClick={getPolicyInfo} variant='raised'>
           Get Policy Info
         </Button>
-        <Button size="small" onClick={setProfile} variant="raised">
+        <Button size='small' onClick={setProfile} variant='raised'>
           Set Profile
         </Button>
-        <Button size="small" onClick={getProfile} variant="raised">
+        <Button size='small' onClick={getProfile} variant='raised'>
           Get Profile
         </Button>
-        <Button size="small" onClick={payPremium} variant="raised">
+        <Button size='small' onClick={payPremium} variant='raised'>
           Pay Premium
         </Button>
-        <Button size="small" onClick={reportInsuredEvent} variant="raised">
+        <Button size='small' onClick={reportInsuredEvent} variant='raised'>
           Report Insured Event
         </Button>
-        <Button size="small" onClick={withdraw} variant="raised">
+        <Button size='small' onClick={withdraw} variant='raised'>
           Withdraw
         </Button>
       {insuranceFundSynced ? (
-        ""
+        ''
       ) : (
         <CircularProgress className={classes.progress} size={20} />
       )}
@@ -171,7 +171,7 @@ const styles: StyleRulesCallback = theme => ({
     marginBottom: 50,
   },
   progress: {
-    float: "right",
+    float: 'right',
     padding: 5,
   },
   title: {

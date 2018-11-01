@@ -1,6 +1,6 @@
-import { drizzleConnect } from "drizzle-react"
-import ReduxDemo from "../components/ReduxDemo"
-import { addData } from "../actions/data"
+import { drizzleConnect } from 'drizzle-react'
+import ReduxDemo from '../components/ReduxDemo'
+import { addData } from '../actions/data'
 
 const mapStateToProps = (state: any) => {
   return {

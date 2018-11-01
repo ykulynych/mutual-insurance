@@ -1,28 +1,51 @@
-import { createStore, applyMiddleware, compose } from "redux"
-import reducer from "./reducer"
+import { createStore, applyMiddleware, compose, combineReducers } from 'redux'
+import { generateContractsInitialState, drizzleReducers } from 'drizzle'
+import drizzleOptions from './drizzleOptions'
+import createSagaMiddleware from 'redux-saga'
+import sagas from './sagas'
+import reducers from './reducers'
+import routes from './routes'
 
-import { generateContractsInitialState } from "drizzle"
-import drizzleOptions from "./drizzleOptions"
-import createSagaMiddleware from "redux-saga"
-import rootSaga from "./rootSaga"
-import logger from "redux-logger"
+const {
+  reducer: routeReducer,
+  middleware: routeMiddleware,
+  enhancer: routeEnhancer,
+} = routes
 
 // Redux DevTools
 const composeEnhancers =
   (window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
 
+const rootReducer = combineReducers({
+  location: routeReducer,
+  ...drizzleReducers,
+  ...reducers
+})
+
+const sagaMiddleware = createSagaMiddleware()
+
+const middleware = [
+  sagaMiddleware,
+  routeMiddleware
+]
+
+if (process.env.NODE_ENV !== 'production') {
+  middleware.push(require('redux-logger').default)
+}
+
 const initialState = {
   contracts: generateContractsInitialState(drizzleOptions),
 }
 
-const sagaMiddleware = createSagaMiddleware()
-
 const store = createStore(
-  reducer,
+  rootReducer,
   initialState,
-  composeEnhancers(applyMiddleware(sagaMiddleware, logger))
+  composeEnhancers(
+    routeEnhancer,
+    applyMiddleware(...middleware)
+  )
 )
 
-sagaMiddleware.run(rootSaga)
+sagaMiddleware.run(sagas)
 
 export default store

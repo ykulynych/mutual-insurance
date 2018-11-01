@@ -1,7 +1,7 @@
-import SwarmDemo from "../components/SwarmDemo"
-import { addHash, addSelectedContent } from "../actions/swarm"
-import { drizzleConnect } from "drizzle-react"
-import { publish, getContent } from "../integrations/swarm"
+import SwarmDemo from '../components/SwarmDemo'
+import { addHash, addSelectedContent } from '../actions/swarm'
+import { drizzleConnect } from 'drizzle-react'
+import { publish, getContent } from '../integrations/swarm'
 
 const mapStateToProps = (state: any) => {
   return {

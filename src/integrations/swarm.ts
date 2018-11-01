@@ -1,8 +1,8 @@
-const gateway = "https://swarm-gateways.net/bzz:/"
+const gateway = 'https://swarm-gateways.net/bzz:/'
 
 export const publish = (content: any) =>
   fetch(gateway, {
-    method: "POST",
+    method: 'POST',
     body: JSON.stringify(content),
   }).then(_ => _.text())
 

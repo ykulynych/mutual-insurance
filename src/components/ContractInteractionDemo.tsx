@@ -1,15 +1,15 @@
-import * as React from "react"
-import { SFC } from "react"
+import * as React from 'react'
+import { SFC } from 'react'
 import {
   StyleRulesCallback,
   withStyles,
   Typography,
   Grid,
-} from "@material-ui/core"
-import * as PropTypes from "prop-types"
-import SwarmDemo from "../containers/SwarmDemo"
-import MutualInsuranceDemo from "./MutualInsuranceDemo"
-import ReduxDemo from "../containers/ReduxDemo"
+} from '@material-ui/core'
+import * as PropTypes from 'prop-types'
+import SwarmDemo from '../containers/SwarmDemo'
+import MutualInsuranceDemo from './MutualInsuranceDemo'
+import ReduxDemo from '../containers/ReduxDemo'
 
 type Props = {
   insuranceFundStatus: any
@@ -35,7 +35,7 @@ const ContractInteraction: SFC<AllProps> = (
 
   // How to get ahold of web3:
   const web3 = drizzle.web3
-  console.log("web3 version: " + web3.version)
+  console.log('web3 version: ' + web3.version)
 
   // const addDateToDataArray = () => addData(Date.now().toString())
 
@@ -49,13 +49,13 @@ const ContractInteraction: SFC<AllProps> = (
           account={account}
         />
       </Grid>
-      {/* <Grid item xs={12} sm={4}>
+      <Grid item xs={12} sm={4}>
         <ReduxDemo />
       </Grid>
       <Grid item xs={12} sm={4}>
         <SwarmDemo />
       </Grid>
-      <Typography>Active account: {account}</Typography> */}
+      <Typography>Active account: {account}</Typography>
     </Grid>
   )
 }

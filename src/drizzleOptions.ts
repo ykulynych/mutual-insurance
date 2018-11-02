@@ -10,7 +10,10 @@ const drizzleOptions = {
     },
   },
   contracts: [InsuranceFund, UserRegistry],
-  events: [],
+  events: {
+    InsuranceFund: ['CompensationPaid', 'FundUpdated'],
+    UserRegistry: ['UserRegistered']
+  },
 }
 
 export default drizzleOptions

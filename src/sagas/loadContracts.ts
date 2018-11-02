@@ -2,6 +2,13 @@ import { Effect, call, select, getContext, takeEvery } from 'redux-saga/effects'
 import * as User from '../contracts/User.json'
 import * as Policy from '../contracts/Policy.json'
 
+// User Contract
+
+function canLoadUserContract(payload: any): boolean {
+  return (payload.type === 'CONTRACT_INITIALIZED' && payload.name === 'UserRegistry') ||
+    (payload.type === 'EVENT_FIRED' && payload.name === 'UserRegistry' && payload.event.event === 'UserRegistered')
+}
+
 function getUserContract(drizzle: any, account: any, UserRegistryContract: any): boolean {
   return UserRegistryContract.methods.me().call()
     .then((me: any) => {
@@ -13,7 +20,7 @@ function getUserContract(drizzle: any, account: any, UserRegistryContract: any):
             { from: account, data: User.deployedBytecode }
           )
         }
-        drizzle.addContract(contractConfig, [])
+        drizzle.addContract(contractConfig, ['UserProfileUpdated', 'PolicyCreated'])
         return true
       }
     )
@@ -23,13 +30,18 @@ function getUserContract(drizzle: any, account: any, UserRegistryContract: any):
     })
 }
 
-function* loadUserContract(payload: any): IterableIterator<Effect> {
-  if (payload.name === 'UserRegistry') {
-    const account = yield select<any>(state => state.accounts[0])
-    const drizzle = yield getContext('drizzle')
-    const res = yield call(getUserContract, drizzle, account, drizzle.contracts.UserRegistry)
-    console.log('Load User contract', res)
-  }
+function* loadUserContract(): IterableIterator<Effect> {
+  const account = yield select<any>(state => state.accounts[0])
+  const drizzle = yield getContext('drizzle')
+  const res = yield call(getUserContract, drizzle, account, drizzle.contracts.UserRegistry)
+  console.log('Load User contract', res)
+}
+
+// Policy Contract
+
+function canLoadPolicyContract(payload: any): boolean {
+  return (payload.type === 'CONTRACT_INITIALIZED' && payload.name === 'User') ||
+    (payload.type === 'EVENT_FIRED' && payload.name === 'User' && payload.event.event === 'PolicyCreated')
 }
 
 function getPolicyContract(drizzle: any, account: any, UserContract: any): boolean {
@@ -43,7 +55,7 @@ function getPolicyContract(drizzle: any, account: any, UserContract: any): boole
             { from: account, data: Policy.deployedBytecode }
           )
         }
-        drizzle.addContract(contractConfig, [])
+        drizzle.addContract(contractConfig, ['InsuredEvent', 'PolicyCancelled', 'PolicyFinished', 'PremiumPaid'])
         return true
       }
     )
@@ -53,16 +65,14 @@ function getPolicyContract(drizzle: any, account: any, UserContract: any): boole
     })
 }
 
-function* loadPolicyContract(payload: any): IterableIterator<Effect> {
-  if (payload.name === 'User') {
-    const account = yield select<any>(state => state.accounts[0])
-    const drizzle = yield getContext('drizzle')
-    const res = yield call(getPolicyContract, drizzle, account, drizzle.contracts.User)
-    console.log('Load Policy contract', res)
-  }
+function* loadPolicyContract(): IterableIterator<Effect> {
+  const account = yield select<any>(state => state.accounts[0])
+  const drizzle = yield getContext('drizzle')
+  const res = yield call(getPolicyContract, drizzle, account, drizzle.contracts.User)
+  console.log('Load Policy contract', res)
 }
 
 export function* loadContracts(): IterableIterator<Effect> {
-  yield takeEvery('CONTRACT_INITIALIZED', loadUserContract)
-  yield takeEvery('CONTRACT_INITIALIZED', loadPolicyContract)
+  yield takeEvery(canLoadUserContract, loadUserContract)
+  yield takeEvery(canLoadPolicyContract, loadPolicyContract)
 }

@@ -6,6 +6,8 @@ import SwarmDemo from '../containers/SwarmDemo'
 import MutualInsuranceDemo from '../components/MutualInsuranceDemo'
 import ReduxDemo from '../containers/ReduxDemo'
 
+const styles: StyleRulesCallback = theme => ({})
+
 type Props = {
   insuranceFundStatus: any
   account: string
@@ -20,8 +22,6 @@ type Context = {
   }
 }
 
-const styles: StyleRulesCallback = theme => ({})
-
 const Component: React.SFC<Props & { classes: any }> = (
   { insuranceFundStatus, dataArray, account, addData, classes },
   { drizzle }: Context
@@ -31,8 +31,6 @@ const Component: React.SFC<Props & { classes: any }> = (
   // How to get ahold of web3:
   const web3 = drizzle.web3
   console.log('web3 version: ' + web3.version)
-
-  // const addDateToDataArray = () => addData(Date.now().toString())
 
   return (
     <Grid container className={classes.root}>
@@ -52,6 +50,11 @@ const Component: React.SFC<Props & { classes: any }> = (
       </Grid>
       <Typography>Active account: {account}</Typography>
     </Grid>
+    // {insuranceFundSynced ? (
+    //   ''
+    // ) : (
+    //   <CircularProgress className={classes.progress} size={20} />
+    // )}
   )
 }
 

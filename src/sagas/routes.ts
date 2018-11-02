@@ -1,7 +1,13 @@
 import { SagaIterator } from 'redux-saga'
 import { select, spawn, take } from 'redux-saga/effects'
+import { home } from './home'
+import { profile } from './profile'
+import { Routes } from '../pages/routes/types'
 
-const routesMap: { [key: string]: () => SagaIterator } = {}
+const routesMap: { [key: string]: () => SagaIterator } = {
+  [Routes.HOME]: home,
+  [Routes.PROFILE]: profile
+}
 
 export function* routes() {
   const initialRoute = yield select<any>(state => state.route)

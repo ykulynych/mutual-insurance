@@ -1,14 +1,9 @@
 import * as React from 'react'
-import { SFC } from 'react'
-import {
-  StyleRulesCallback,
-  withStyles,
-  Typography,
-  Grid,
-} from '@material-ui/core'
+import { drizzleConnect } from 'drizzle-react'
+import { StyleRulesCallback, withStyles, Typography, Grid } from '@material-ui/core'
 import * as PropTypes from 'prop-types'
 import SwarmDemo from '../containers/SwarmDemo'
-import MutualInsuranceDemo from './MutualInsuranceDemo'
+import MutualInsuranceDemo from '../components/MutualInsuranceDemo'
 import ReduxDemo from '../containers/ReduxDemo'
 
 type Props = {
@@ -18,8 +13,6 @@ type Props = {
   addData: (data: string) => void
 }
 
-type AllProps = Props & { classes: StyleClassNames }
-
 type Context = {
   drizzle: {
     web3: any
@@ -27,7 +20,9 @@ type Context = {
   }
 }
 
-const ContractInteraction: SFC<AllProps> = (
+const styles: StyleRulesCallback = theme => ({})
+
+const Component: React.SFC<Props & { classes: any }> = (
   { insuranceFundStatus, dataArray, account, addData, classes },
   { drizzle }: Context
 ) => {
@@ -60,18 +55,16 @@ const ContractInteraction: SFC<AllProps> = (
   )
 }
 
-type StyleClassNames = {
-  root: string
-}
-
-const styles: StyleRulesCallback = theme => ({
-  root: {
-    flexGrow: 1,
-  },
+const mapStateToProps = (state: any) => ({
+  insuranceFundStatus: state.contracts.InsuranceFund,
+  account: state.accounts[0],
 })
 
-ContractInteraction.contextTypes = {
+Component.contextTypes = {
   drizzle: PropTypes.object,
 }
 
-export default withStyles(styles)<Props>(ContractInteraction)
+export default drizzleConnect(
+  withStyles(styles)<Props>(Component),
+  mapStateToProps
+)

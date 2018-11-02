@@ -9,5 +9,6 @@ import { Routes, RoutesMap } from './pages/routes/types'
 const routesMap: RoutesMap = {}
 
 routesMap[Routes.HOME] = '/'
+routesMap[Routes.PROFILE] = '/profile'
 
 export default router.connectRoutes(routesMap)

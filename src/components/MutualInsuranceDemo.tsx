@@ -40,7 +40,7 @@ const MutualInsuranceDemo: SFC<AllProps> = (
     contracts.UserRegistry.methods.me().call().then((me: any) => {
         console.log(me)
         var contractConfig = {
-          contractName: 'MyUserInstance',
+          contractName: 'User',
           web3Contract: new drizzle.web3.eth.Contract(User.abi, me, { from: account, data: User.deployedBytecode })
         }
         drizzle.addContract(contractConfig, [])
@@ -49,14 +49,14 @@ const MutualInsuranceDemo: SFC<AllProps> = (
   }
 
   const createPolicy = () => {
-    contracts.MyUserInstance.methods.createPolicy(1e18.toString(), 100000000, 100).send()
+    contracts.User.methods.createPolicy(1e18.toString(), 100000000, 100).send()
   }
 
   const createPolicyInstance = () => {
-    contracts.MyUserInstance.methods.getPolicy().call().then((policy: any) => {
+    contracts.User.methods.getPolicy().call().then((policy: any) => {
       console.log(policy)
       var contractConfig = {
-        contractName: 'MyPolicyInstance',
+        contractName: 'Policy',
         web3Contract: new drizzle.web3.eth.Contract(Policy.abi, policy, { from: account, data: Policy.deployedBytecode })
       }
       drizzle.addContract(contractConfig, [])
@@ -64,33 +64,33 @@ const MutualInsuranceDemo: SFC<AllProps> = (
   }
 
   const cancelPolicy = () => {
-    contracts.MyUserInstance.methods.cancelPolicy().send()
+    contracts.User.methods.cancelPolicy().send()
   }
 
   const payPremium = () => {
-    contracts.MyUserInstance.methods.payPremium().send({ from: account, value: drizzle.web3.utils.toWei('1', 'ether')})
+    contracts.User.methods.payPremium().send({ from: account, value: drizzle.web3.utils.toWei('1', 'ether')})
   }
 
   const setProfile = () => {
-    contracts.MyUserInstance.methods.setProfileInfo(
+    contracts.User.methods.setProfileInfo(
       'Yura', 10000, 'Lviv', 'male', '0xa5b9d60f32436310afebcfda832817a68921beb782fabf7915cc0460b443116a'
     ).send()
   }
 
   const getProfile = () => {
-    contracts.MyUserInstance.methods.getProfileInfo().call().then((info: any) => {
+    contracts.User.methods.getProfileInfo().call().then((info: any) => {
       console.log('PROFILE_INFO', info)
     })
   }
 
   const getPolicyInfo = () => {
-    contracts.MyPolicyInstance.methods.getPolicyInfo().call().then((info: any) =>
+    contracts.Policy.methods.getPolicyInfo().call().then((info: any) =>
       console.log(info)
     ).catch((err: any) => console.error(err))
   }
 
   const reportInsuredEvent = () => {
-    contracts.MyUserInstance.methods.reportInsuredEvent().send()
+    contracts.User.methods.reportInsuredEvent().send()
   }
 
   const withdraw = () => {

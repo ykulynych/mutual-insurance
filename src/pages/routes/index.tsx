@@ -5,10 +5,11 @@ import * as Types from './types'
 
 import Home from '../Home'
 import NotFound from '../NotFound'
-import ContractInteractionDemo from '../../containers/ContractInteractionDemo'
+import Profile from '../Profile'
 
 const routesMap: { [key: string]: any } = {
-  [Types.Routes.HOME]: ContractInteractionDemo,
+  [Types.Routes.HOME]: Home,
+  [Types.Routes.PROFILE]: Profile,
   [Types.Routes.NOTFOUND]: NotFound
 }
 

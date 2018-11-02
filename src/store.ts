@@ -1,5 +1,5 @@
 import { createStore, applyMiddleware, compose, combineReducers } from 'redux'
-import { generateContractsInitialState, drizzleReducers } from 'drizzle'
+import { generateContractsInitialState, drizzleReducers, Drizzle } from 'drizzle'
 import drizzleOptions from './drizzleOptions'
 import createSagaMiddleware from 'redux-saga'
 import sagas from './sagas'
@@ -37,7 +37,7 @@ const initialState = {
   contracts: generateContractsInitialState(drizzleOptions),
 }
 
-const store = createStore(
+export const store = createStore(
   rootReducer,
   initialState,
   composeEnhancers(
@@ -46,6 +46,7 @@ const store = createStore(
   )
 )
 
-sagaMiddleware.run(sagas)
+export const drizzle = new Drizzle(drizzleOptions, store)
 
-export default store
+sagaMiddleware.setContext({ drizzle })
+sagaMiddleware.run(sagas)

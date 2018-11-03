@@ -10,5 +10,6 @@ const routesMap: RoutesMap = {}
 
 routesMap[Routes.HOME] = '/'
 routesMap[Routes.PROFILE] = '/profile'
+routesMap[Routes.POLICY] = '/policy'
 
 export default router.connectRoutes(routesMap)

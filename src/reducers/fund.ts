@@ -6,7 +6,7 @@ const initState = (): any => ({
   compensations: 0
 })
 
-export const insuranceFund = reducerWithInitialState<any>(
+export const fund = reducerWithInitialState<any>(
   initState()
 )  
   .case(Actions.setFund, (state, data) => ({

@@ -7,4 +7,5 @@ const actionCreator = actionCreatorFactory()
 
 export const routeHome = actionCreator<{}>(Routes.HOME)
 export const routeProfile = actionCreator<{}>(Routes.PROFILE)
+export const routePolicy = actionCreator<{}>(Routes.POLICY)
 export const routeNotFound = actionCreator<{}>(NOT_FOUND)

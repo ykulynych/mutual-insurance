@@ -1,6 +1,7 @@
 export enum Routes {
   HOME = 'HOME',
   PROFILE = 'PROFILE',
+  POLICY = 'POLICY',
   NOTFOUND = '@@redux-first-router/NOT_FOUND',
 }
 

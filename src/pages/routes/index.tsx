@@ -6,10 +6,12 @@ import * as Types from './types'
 import Home from '../Home'
 import NotFound from '../NotFound'
 import Profile from '../Profile'
+import Policy from '../Policy'
 
 const routesMap: { [key: string]: any } = {
   [Types.Routes.HOME]: Home,
   [Types.Routes.PROFILE]: Profile,
+  [Types.Routes.POLICY]: Policy,
   [Types.Routes.NOTFOUND]: NotFound
 }
 

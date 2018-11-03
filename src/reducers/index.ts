@@ -1,11 +1,13 @@
-import data from './data'
 import swarm from './swarm'
 import route from './route'
-import { insuranceFund } from './insuranceFund'
+import { fund } from './fund'
+import { user } from './user'
+import { policy } from './policy'
 
 export default {
-  data,
   swarm,
   route,
-  insuranceFund
+  fund,
+  user,
+  policy
 }

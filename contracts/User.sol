@@ -10,7 +10,6 @@ contract User {
     uint birthDate;
     string city;
     string gender;
-    bytes32 avatar; //Swarm hash
   }
 
   address public owner;
@@ -19,8 +18,8 @@ contract User {
   Policy private _policy;
   InsuranceFund private _fund;
 
-  event UserProfileUpdated();
-  event PolicyCreated();
+  event UserProfileUpdated(string name, uint birthDate, string city, string gender);
+  event PolicyCreated(Policy policy);
 
   modifier onlyOwner() {
     require(msg.sender == owner, "Only owner can call this function.");
@@ -45,26 +44,23 @@ contract User {
     string name,
     uint birthDate,
     string city,
-    string gender,
-    bytes32 avatar
+    string gender
   ) {
-    return (_profile.name, _profile.birthDate, _profile.city, _profile.gender, _profile.avatar);
+    return (_profile.name, _profile.birthDate, _profile.city, _profile.gender);
   }
 
   function setProfileInfo(
     string name,
     uint birthDate,
     string city, 
-    string gender,
-    bytes32 avatar
+    string gender
   ) public onlyOwner {
     _profile.name = name;
     _profile.birthDate = birthDate;
     _profile.city = city;
     _profile.gender = gender;
-    _profile.avatar = avatar;
 
-    emit UserProfileUpdated();
+    emit UserProfileUpdated(name, birthDate, city, gender);
   }
 
   function createPolicy(uint compensation, uint duration, uint premium) public onlyOwner {
@@ -77,7 +73,7 @@ contract User {
 
     _policy = policy;
 
-    emit PolicyCreated();
+    emit PolicyCreated(policy);
   }
 
   function getPolicy() public view onlyOwner havePolicy returns(Policy) {

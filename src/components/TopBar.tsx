@@ -10,28 +10,33 @@ const styles: StyleRulesCallback = theme => ({
 })
 
 interface Props extends WithStyles<typeof styles> {
-  insuranceFund: any
+  fund: any
+  user: any
   toHome: () => void
   toProfile: () => void
+  toPolicy: () => void
 }
 
-const Component = withStyles(styles)<Props>(({ insuranceFund, toHome, toProfile, classes }) => (
+const Component = withStyles(styles)<Props>(({ fund, user, toHome, toProfile, toPolicy, classes }) => (
   <AppBar position='absolute'>
     <Toolbar className={classes.toolBar}>
       <div>
         <Typography variant='body1' color='inherit' component='h4'>
-          {`Розмір страхового фонду: ${insuranceFund.fund} ETH`}
+          {`Розмір страхового фонду: ${fund.fund} ETH`}
         </Typography>
         <Typography variant='body1' color='inherit' component='h4'>
-          {`Розмір виплачених компенсацій: ${insuranceFund.compensations} ETH`}
+          {`Розмір виплачених компенсацій: ${fund.compensations} ETH`}
         </Typography>
       </div>
       <div>
         <Button color='inherit' onClick={() => toHome()}>
-          Home
+          Головна
         </Button>
-        <Button color='inherit' onClick={() => toProfile()}>
-          Profile
+        <Button color='inherit' onClick={() => toProfile()} disabled={!user.isRegistered}>
+          Профайл
+        </Button>
+        <Button color='inherit' onClick={() => toPolicy()} disabled={!user.hasPolicy}>
+          Поліс
         </Button>
       </div>
     </Toolbar>
@@ -39,13 +44,15 @@ const Component = withStyles(styles)<Props>(({ insuranceFund, toHome, toProfile,
 ))
 
 const mapStateToProps = (state: any) => ({
-  insuranceFund: state.insuranceFund
+  fund: state.fund,
+  user: state.user
 })
 
 const mapDispatchToProps = (dispatch: any) => {
   return {
     toHome: () => dispatch(Actions.routeHome({})),
-    toProfile: () => dispatch(Actions.routeProfile({}))
+    toProfile: () => dispatch(Actions.routeProfile({})),
+    toPolicy: () => dispatch(Actions.routePolicy({}))
   }
 }
 

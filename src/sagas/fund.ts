@@ -9,7 +9,7 @@ function canSetFundData(payload: any): boolean {
 
 function getFundData(InsuranceFundContract: any): any {
   return InsuranceFundContract.methods.getFund().call()
-    .then((fund: any) => ({ fund }))
+    .then((fFund: any) => ({ fFund }))
     .catch((fError: any) => ({ fError }))
 }
 
@@ -21,10 +21,10 @@ function getCompensationsData(InsuranceFundContract: any): any {
 
 function* setFundData(): IterableIterator<Effect> {
   const drizzle = yield getContext('drizzle')
-  const { fund, fError } = yield call(getFundData, drizzle.contracts.InsuranceFund)
+  const { fFund, fError } = yield call(getFundData, drizzle.contracts.InsuranceFund)
 
   if (fund) {
-    yield put(Actions.setFund(fund))
+    yield put(Actions.setFund(fFund))
   } else {
     console.error(fError)
   }
@@ -53,7 +53,7 @@ function* updateFundData(payload: any): IterableIterator<Effect> {
   }
 }
 
-export function* insuranceFund(): IterableIterator<Effect> {
+export function* fund(): IterableIterator<Effect> {
   yield takeEvery(canSetFundData, setFundData)
   yield takeEvery(canUpdateFundData, updateFundData)
 }

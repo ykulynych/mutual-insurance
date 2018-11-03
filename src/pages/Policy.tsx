@@ -3,7 +3,6 @@ import { Card, CardContent, Button, CardActions, Typography, StyleRulesCallback,
 import { drizzleConnect } from 'drizzle-react'
 import * as Actions from '../actions'
 import { EditProfile } from '../components/EditProfile'
-import { CreatePolicy } from '../components/CreatePolicy'
 
 const styles: StyleRulesCallback = theme => ({
   container: {
@@ -12,37 +11,47 @@ const styles: StyleRulesCallback = theme => ({
 })
 
 interface Props extends WithStyles<typeof styles> {
-  user: any
+  policy: any
+  toHome: () => void
+  toProfile: () => void
 }
 
-const Component = withStyles(styles)<Props>(({ user, classes }) => (
+const Component = withStyles(styles)<Props>(({ policy, toHome, toProfile, classes }) => (
   <Card className={classes.container}>
     <CardContent>
       <Typography variant='headline' component='h2'>
-        {user.name}
+        {policy.startTime}
       </Typography>
       <Typography variant='headline' component='h2'>
-        {user.gender}
+        {policy.endTime}
       </Typography>
       <Typography variant='headline' component='h2'>
-        {user.city}
+        {policy.timeOfNextPayement}
       </Typography>
       <Typography variant='headline' component='h2'>
-        {user.birthDate}
+        {policy.premium / 1e18}
+      </Typography>
+      <Typography variant='headline' component='h2'>
+        {policy.compensation / 1e18}
       </Typography>
     </CardContent>
     <CardActions>
       <EditProfile />
-      {!user.hasPolicy && <CreatePolicy />}
     </CardActions>
   </Card>
 ))
 
 const mapStateToProps = (state: any) => ({
-  user: state.user
+  policy: state.policy
+})
+
+const mapDispatchToProps = (dispatch: any) => ({
+  toHome: () => dispatch(Actions.routeHome({})),
+  toProfile: () => dispatch(Actions.routeProfile({}))
 })
 
 export default drizzleConnect(
   Component,
-  mapStateToProps
+  mapStateToProps,
+  mapDispatchToProps
 )

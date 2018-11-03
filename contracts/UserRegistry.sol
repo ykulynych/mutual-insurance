@@ -17,11 +17,11 @@ contract UserRegistry {
     return users[msg.sender];
   }
 
-  function register() external {
+  function register(string name, uint birthDate, string city, string gender) public {
     require(msg.sender != 0x0, "Wrong address.");
     require(address(users[msg.sender]) == 0x0, "You already registered.");
 
-    User user = new User(msg.sender, _fund);
+    User user = new User(msg.sender, _fund, name, birthDate, city, gender);
     users[msg.sender] = user;
 
     emit UserRegistered(user);

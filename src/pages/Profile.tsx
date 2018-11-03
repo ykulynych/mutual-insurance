@@ -13,9 +13,11 @@ const styles: StyleRulesCallback = theme => ({
 
 interface Props extends WithStyles<typeof styles> {
   user: any
+  updateProfile: (profile: any) => any
+  withdraw: () => any
 }
 
-const Component = withStyles(styles)<Props>(({ user, classes }) => (
+const Component = withStyles(styles)<Props>(({ user, updateProfile, withdraw, classes }) => (
   <Card className={classes.container}>
     <CardContent>
       <Typography variant='headline' component='h2'>
@@ -32,8 +34,17 @@ const Component = withStyles(styles)<Props>(({ user, classes }) => (
       </Typography>
     </CardContent>
     <CardActions>
-      <EditProfile />
+      <EditProfile
+         name='Редагувати профіль'
+         description='Якщо ви ввели неправильні дані, можете їх виправити.'
+         onAccept={updateProfile}
+      />
       {!user.hasPolicy && <CreatePolicy />}
+      {user.canWithdraw &&
+        <Button onClick={() => withdraw()}  color='secondary' variant='outlined'>
+          Отримати компенсацію
+        </Button>
+      }
     </CardActions>
   </Card>
 ))
@@ -42,7 +53,13 @@ const mapStateToProps = (state: any) => ({
   user: state.user
 })
 
+const mapDispatchToProps = (dispatch: any) => ({
+  updateProfile: (profile: any) => dispatch(Actions.updateProfile(profile)),
+  withdraw: () => dispatch(Actions.withdrawCompensation({}))
+})
+
 export default drizzleConnect(
   Component,
-  mapStateToProps
+  mapStateToProps,
+  mapDispatchToProps
 )

@@ -16,7 +16,12 @@ export const policy = reducerWithInitialState<any>(
     ...state,
     startTime: new Date(parseInt(data.startTime, 10)).toISOString().slice(0, 10),
     endTime: new Date(parseInt(data.endTime, 10)).toISOString().slice(0, 10),
-    timeOfNextPayement: new Date(parseInt(data.endTime, 10)).toISOString().slice(0, 10),
+    timeOfNextPayement: new Date(parseInt(data.timeOfNextPayement, 10)).toISOString().slice(0, 10),
     premium: data.premium,
     compensation: data.compensation
   }))
+  .case(Actions.updateTimeOfNextPayement, (state, data) => ({
+    ...state,
+    timeOfNextPayement: new Date(parseInt(data, 10)).toISOString().slice(0, 10),
+  }))
+  .case(Actions.submitCancelledPolicy, initState)

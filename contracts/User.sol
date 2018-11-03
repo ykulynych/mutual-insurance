@@ -31,10 +31,21 @@ contract User {
     _;
   }
 
-  constructor(address owner_, InsuranceFund fund_) public {
+  constructor(
+    address owner_,
+    InsuranceFund fund_,
+    string name_,
+    uint birthDate_,
+    string city_,
+    string gender_
+  ) public {
     require(address(owner_) != 0x0, "Wrong address");
     require(msg.sender != 0x0, "Wrong address.");
 
+    _profile.name = name_;
+    _profile.birthDate = birthDate_;
+    _profile.city = city_;
+    _profile.gender = gender_;
     owner = owner_;
     _fund = fund_;
     registry = UserRegistry(msg.sender);
@@ -63,13 +74,21 @@ contract User {
     emit UserProfileUpdated(name, birthDate, city, gender);
   }
 
-  function createPolicy(uint compensation, uint duration, uint premium) public onlyOwner {
+  function createPolicy(uint currentTime, uint duration, uint premium, uint compensation) public onlyOwner {
     // require(_profile.birthDate < 18 * 365.25 days, "You are too young to do this.");
     // require(duration > 30 * 365.25 days, "Too long policy");
     // require(compensation > 10000 ether, "Too big compensation");
     // TODO: check if policy exist
 
-    Policy policy = new Policy(msg.sender, address(this), now, now + duration, premium, compensation, _fund);
+    Policy policy = new Policy(
+      msg.sender,
+      address(this),
+      currentTime,
+      currentTime + duration,
+      premium,
+      compensation,
+      _fund
+    );
 
     _policy = policy;
 

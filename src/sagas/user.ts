@@ -42,9 +42,38 @@ function* updateUserProfile({ payload }: any): IterableIterator<Effect> {
 }
 
 // Register User
-function* registerUser(): IterableIterator<Effect> {
+function* registerUser({ payload }: any): IterableIterator<Effect> {
   const drizzle = yield getContext('drizzle')
-  drizzle.contracts.UserRegistry.methods.register().send()
+  drizzle.contracts.UserRegistry.methods.register(...payload).send()
+}
+
+// Check for compensation
+function canCheckForCompensation(payload: any): boolean {
+  return (payload.type === 'CONTRACT_INITIALIZED' && payload.name === 'InsuranceFund')
+}
+
+function checkForCompensation(InsuranceFundContract: any): boolean {
+  return InsuranceFundContract.methods.checkCompensation().call()
+    .then((isCompensation: any) => ({ isCompensation }))
+    .catch((error: any) => ({ error }))
+}
+
+function* canWithdrawCompensation(): IterableIterator<Effect> {
+  const drizzle = yield getContext('drizzle')
+  const { isCompensation, error } = yield call(checkForCompensation, drizzle.contracts.InsuranceFund)
+
+  if (isCompensation) {
+    yield put(Actions.canWithdrawCompensation({}))
+  } else {
+    console.error(error)
+  }
+}
+
+// Withdraw money
+function* withdrawCompensation(): IterableIterator<Effect> {
+  const drizzle = yield getContext('drizzle')
+  drizzle.contracts.InsuranceFund.methods.withdrawCompensation().send()
+  yield put(Actions.gotCompensation({}))
 }
 
 export function* user(): IterableIterator<Effect> {
@@ -52,4 +81,6 @@ export function* user(): IterableIterator<Effect> {
   yield takeEvery(canGetUserProfileUpdate, getUserProfileUpdate)
   yield takeEvery(Actions.updateProfile, updateUserProfile)
   yield takeEvery(Actions.register, registerUser)
+  yield takeEvery(Actions.withdrawCompensation, withdrawCompensation)
+  yield takeEvery(canCheckForCompensation, canWithdrawCompensation)
 }

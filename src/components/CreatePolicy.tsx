@@ -47,11 +47,11 @@ class Component extends React.Component<Props> {
 
   accept = () => {
     this.setState({ open: false })
-    this.props.createPolicy([
-      (this.state.compensation * 1e18).toString(),
-      this.state.duration,
-      (this.state.premium * 1e18).toString()
-    ])
+    this.props.createPolicy({
+      duration: this.state.duration,
+      premium: this.state.premium,
+      compensation: this.state.compensation
+    })
   }
 
   handleChangeDuration = (event: any) => {

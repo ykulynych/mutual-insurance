@@ -15,8 +15,6 @@ import {
   WithStyles,
   StyleRulesCallback
 } from '@material-ui/core'
-import * as Actions from '../actions'
-import { drizzleConnect } from 'drizzle-react'
 
 const styles: StyleRulesCallback = theme => ({
   mgt15: {
@@ -25,7 +23,9 @@ const styles: StyleRulesCallback = theme => ({
 })
 
 interface Props extends WithStyles<typeof styles> {
-  updateProfile: (profile: any) => any
+  name: string,
+  description: string,
+  onAccept: (profile: any) => any
 }
 
 class Component extends React.Component<Props> {
@@ -47,7 +47,7 @@ class Component extends React.Component<Props> {
 
   accept = () => {
     this.setState({ open: false })
-    this.props.updateProfile([
+    this.props.onAccept([
       this.state.name,
       Date.parse(this.state.birthDate),
       this.state.city,
@@ -72,19 +72,19 @@ class Component extends React.Component<Props> {
   }
 
   render() {
-    const { classes } = this.props
+    const { classes, name, description } = this.props
     return (
       <div>
-        <Button color='primary' variant='raised' onClick={this.handleClickOpen}>Рудагувати профіль</Button>
+        <Button color='primary' variant='raised' onClick={this.handleClickOpen}>{name}</Button>
         <Dialog
           open={this.state.open}
           onClose={this.cancel}
           aria-labelledby='form-dialog-title'
         >
-          <DialogTitle id='form-dialog-title'>Редагувати профіль</DialogTitle>
+          <DialogTitle id='form-dialog-title'>{name}</DialogTitle>
           <DialogContent>
             <DialogContentText>
-              Редагуйте профіль обережно!
+              {description}
             </DialogContentText>
             <TextField 
               autoFocus
@@ -153,12 +153,4 @@ class Component extends React.Component<Props> {
   }
 }
 
-const mapDispatchToProps = (dispatch: any) => ({
-  updateProfile: (profile: any) => dispatch(Actions.updateProfile(profile))
-})
-
-export const EditProfile = drizzleConnect(
-  withStyles(styles)<Props>(Component),
-  null,
-  mapDispatchToProps
-)
+export const EditProfile = withStyles(styles)<Props>(Component)

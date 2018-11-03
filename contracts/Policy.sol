@@ -28,7 +28,7 @@ contract Policy {
   event InsuredEvent(address owner, uint compensation);
   event PolicyCancelled(address owner);
   event PolicyFinished(address owner);
-  event PremiumPaid(address owner, uint premium);
+  event PremiumPaid(address owner, uint premium, uint timeOfNextPayement);
 
   modifier onlyOwner() {
     require(msg.sender == owner || msg.sender == ownerContract, "Only policy owner can call this function.");
@@ -85,17 +85,16 @@ contract Policy {
   }
 
   function payPremium() external payable onlyOwner onlyOngoing {
-    _policy.timeOfNextPayement += 30.4375 days;
+    _policy.timeOfNextPayement += 2629800000; // one month in ms
 
     _fund.payPremium.value(msg.value)();
 
-    emit PremiumPaid(owner, msg.value);
+    emit PremiumPaid(owner, msg.value, _policy.timeOfNextPayement);
   }
 
   function reportInsuredEvent() external onlyOwner onlyOngoing {
     // if (now > _policy.endTime) {
     //   _status = Status.Finished;
-
     //   emit PolicyFinished(owner);
     // } else {
     // }

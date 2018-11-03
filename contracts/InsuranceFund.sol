@@ -19,7 +19,11 @@ contract InsuranceFund {
     return compensationsPaid;
   }
 
-  function withdraw() public {
+  function checkCompensation() public view returns(bool) {
+    return pendingReturns[msg.sender] != 0;
+  }
+
+  function withdrawCompensation() public {
     require(msg.sender != 0x0, "Wrong address.");
 
     uint amount = pendingReturns[msg.sender];

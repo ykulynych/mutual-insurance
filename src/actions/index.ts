@@ -1,4 +1,3 @@
-export * from './swarm'
 export * from './route'
 export * from './fund'
 export * from './user'

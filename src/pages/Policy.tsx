@@ -2,7 +2,7 @@ import * as React from 'react'
 import { Card, CardContent, Button, CardActions, Typography, StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core'
 import { drizzleConnect } from 'drizzle-react'
 import * as Actions from '../actions'
-import { EditProfile } from '../components/EditProfile'
+import { PayPremium } from '../components/PayPremium'
 
 const styles: StyleRulesCallback = theme => ({
   container: {
@@ -12,11 +12,11 @@ const styles: StyleRulesCallback = theme => ({
 
 interface Props extends WithStyles<typeof styles> {
   policy: any
-  toHome: () => void
-  toProfile: () => void
+  cancelPolicy: () => any
+  reportEvent: () => any
 }
 
-const Component = withStyles(styles)<Props>(({ policy, toHome, toProfile, classes }) => (
+const Component = withStyles(styles)<Props>(({ policy, cancelPolicy, reportEvent, classes }) => (
   <Card className={classes.container}>
     <CardContent>
       <Typography variant='headline' component='h2'>
@@ -36,7 +36,13 @@ const Component = withStyles(styles)<Props>(({ policy, toHome, toProfile, classe
       </Typography>
     </CardContent>
     <CardActions>
-      <EditProfile />
+      <PayPremium />
+      <Button size='medium' color='secondary' variant='outlined' onClick={() => cancelPolicy()}>
+        Відмінити поліс
+      </Button>
+      <Button size='medium' color='primary' variant='outlined' onClick={() => reportEvent()}>
+        Повідомити про страховий випадок
+      </Button>
     </CardActions>
   </Card>
 ))
@@ -46,8 +52,8 @@ const mapStateToProps = (state: any) => ({
 })
 
 const mapDispatchToProps = (dispatch: any) => ({
-  toHome: () => dispatch(Actions.routeHome({})),
-  toProfile: () => dispatch(Actions.routeProfile({}))
+  cancelPolicy: () => dispatch(Actions.cancelPolicy({})),
+  reportEvent: () => dispatch(Actions.reportEvent({}))
 })
 
 export default drizzleConnect(

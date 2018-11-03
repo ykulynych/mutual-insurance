@@ -1,6 +1,5 @@
 import { SagaIterator } from 'redux-saga'
 import { select, spawn, take } from 'redux-saga/effects'
-import { Routes } from '../pages/routes/types'
 
 const routesMap: { [key: string]: () => SagaIterator } = {
   // [Routes.HOME]: home,

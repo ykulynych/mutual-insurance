@@ -2,10 +2,10 @@ import * as React from 'react'
 import { DrizzleProvider } from './components/DrizzleProvider'
 import { LoadingContainer } from 'drizzle-react-components'
 import { store, drizzle } from './store'
-import Layout from './components/Layout'
+import { Layout } from './components/Layout'
 import { Routes } from './pages/routes'
 
-const App: React.SFC = () => (
+export const App: React.SFC = () => (
   <DrizzleProvider drizzle={drizzle} store={store}>
     <LoadingContainer>
       <Layout>
@@ -14,5 +14,3 @@ const App: React.SFC = () => (
     </LoadingContainer>
   </DrizzleProvider>
 )
-
-export default App

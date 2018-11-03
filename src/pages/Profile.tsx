@@ -4,6 +4,8 @@ import { drizzleConnect } from 'drizzle-react'
 import * as Actions from '../actions'
 import { EditProfile } from '../components/EditProfile'
 import { CreatePolicy } from '../components/CreatePolicy'
+import { Profile as ProfileType, User } from 'src/types'
+import { Dispatch } from 'redux'
 
 const styles: StyleRulesCallback = theme => ({
   container: {
@@ -12,8 +14,8 @@ const styles: StyleRulesCallback = theme => ({
 })
 
 interface Props extends WithStyles<typeof styles> {
-  user: any
-  updateProfile: (profile: any) => any
+  user: User
+  updateProfile: (profile: ProfileType) => any
   withdraw: () => any
 }
 
@@ -51,14 +53,14 @@ const Component = withStyles(styles)<Props>(({ user, updateProfile, withdraw, cl
 
 const mapStateToProps = (state: any) => ({
   user: state.user
-})
+}) as Props
 
-const mapDispatchToProps = (dispatch: any) => ({
-  updateProfile: (profile: any) => dispatch(Actions.updateProfile(profile)),
+const mapDispatchToProps = (dispatch: Dispatch<any>) => ({
+  updateProfile: profile => dispatch(Actions.updateProfile(profile)),
   withdraw: () => dispatch(Actions.withdrawCompensation({}))
-})
+}) as Props
 
-export default drizzleConnect(
+export const Profile = drizzleConnect(
   Component,
   mapStateToProps,
   mapDispatchToProps

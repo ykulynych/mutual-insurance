@@ -2,6 +2,7 @@ import * as React from 'react'
 import { AppBar, Button, Toolbar, Typography, StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core'
 import { drizzleConnect } from 'drizzle-react'
 import * as Actions from '../actions'
+import { Fund, User } from 'src/types'
 
 const styles: StyleRulesCallback = theme => ({
   toolBar: {
@@ -10,8 +11,8 @@ const styles: StyleRulesCallback = theme => ({
 })
 
 interface Props extends WithStyles<typeof styles> {
-  fund: any
-  user: any
+  fund: Fund
+  user: User
   toHome: () => void
   toProfile: () => void
   toPolicy: () => void
@@ -46,17 +47,15 @@ const Component = withStyles(styles)<Props>(({ fund, user, toHome, toProfile, to
 const mapStateToProps = (state: any) => ({
   fund: state.fund,
   user: state.user
-})
+}) as Props
 
-const mapDispatchToProps = (dispatch: any) => {
-  return {
-    toHome: () => dispatch(Actions.routeHome({})),
-    toProfile: () => dispatch(Actions.routeProfile({})),
-    toPolicy: () => dispatch(Actions.routePolicy({}))
-  }
-}
+const mapDispatchToProps = (dispatch: any) => ({
+  toHome: () => dispatch(Actions.routeHome({})),
+  toProfile: () => dispatch(Actions.routeProfile({})),
+  toPolicy: () => dispatch(Actions.routePolicy({}))
+}) as Props
 
-export default drizzleConnect(
+export const TopBar = drizzleConnect(
   Component,
   mapStateToProps,
   mapDispatchToProps

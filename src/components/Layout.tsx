@@ -1,22 +1,6 @@
 import * as React from 'react'
-import { SFC } from 'react'
-import { StyleRulesCallback, withStyles } from '@material-ui/core'
-import TopBar from './TopBar'
-
-type Props = { children: any }
-type AllProps = Props & { classes: StyleClassNames }
-
-const Layout: SFC<AllProps> = ({ classes, children }) => (
-  <div className={classes.root}>
-    <TopBar />
-    <main className={classes.content}>{children}</main>
-  </div>
-)
-
-type StyleClassNames = {
-  root: string
-  content: string
-}
+import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core'
+import { TopBar } from './TopBar'
 
 const styles: StyleRulesCallback = theme => ({
   root: {
@@ -35,4 +19,13 @@ const styles: StyleRulesCallback = theme => ({
   },
 })
 
-export default withStyles(styles)<Props>(Layout)
+interface Props extends WithStyles<typeof styles> {
+  children: React.Component | React.SFC | any // drizzleConnect not typed
+}
+
+export const Layout = withStyles(styles)<Props>(({ classes, children }) => (
+  <div className={classes.root}>
+    <TopBar />
+    <main className={classes.content}>{children}</main>
+  </div>
+))

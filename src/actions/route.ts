@@ -1,7 +1,6 @@
 import actionCreatorFactory from 'typescript-fsa'
 import { NOT_FOUND } from 'redux-first-router'
-
-import { Routes } from '../pages/routes/types'
+import { Routes } from '../types'
 
 const actionCreator = actionCreatorFactory()
 

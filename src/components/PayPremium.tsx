@@ -13,6 +13,7 @@ import {
 } from '@material-ui/core'
 import * as Actions from '../actions'
 import { drizzleConnect } from 'drizzle-react'
+import { Dispatch } from 'redux'
 
 const styles: StyleRulesCallback = theme => ({
   mgt15: {
@@ -22,7 +23,7 @@ const styles: StyleRulesCallback = theme => ({
 
 interface Props extends WithStyles<typeof styles> {
   premium: any,
-  payPremium: (premium: any) => any
+  payPremium: (premium: number) => any
 }
 
 class Component extends React.Component<Props> {
@@ -86,11 +87,11 @@ class Component extends React.Component<Props> {
 
 const mapStateToProps = (state: any) => ({
   premium: state.policy.premium / 1e18
-})
+}) as Props
 
-const mapDispatchToProps = (dispatch: any) => ({
-  payPremium: (premium: any) => dispatch(Actions.payPremium(premium))
-})
+const mapDispatchToProps = (dispatch: Dispatch<any>) => ({
+  payPremium: premium => dispatch(Actions.payPremium(premium))
+}) as Props
 
 export const PayPremium = drizzleConnect(
   withStyles(styles)<Props>(Component),

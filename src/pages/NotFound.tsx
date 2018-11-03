@@ -1,9 +1,7 @@
 import * as React from 'react'
 
-const Component: React.SFC<{}> = ({ }) => (
+export const NotFound: React.SFC = () => (
   <div>
     <h2>Page Not Found</h2>
   </div>
 )
-
-export default Component

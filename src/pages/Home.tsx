@@ -1,15 +1,16 @@
 import * as React from 'react'
 import { Theme, withStyles, StyleRulesCallback, WithStyles } from '@material-ui/core/styles'
 import { drizzleConnect } from 'drizzle-react'
-import Button from '@material-ui/core/Button'
 import * as Actions from '../actions'
 import { EditProfile } from '../components/EditProfile'
+import { Profile } from 'src/types'
+import { Dispatch } from 'redux'
 
 const styles: StyleRulesCallback = (theme: Theme) => ({})
 
 interface Props extends WithStyles<typeof styles> {
   isRegistered: boolean,
-  register: (profile: any) => any
+  register: (profile: Profile) => any
 }
 
 const Component = withStyles(styles)<Props>(({ isRegistered, register }) => {
@@ -37,13 +38,13 @@ const Component = withStyles(styles)<Props>(({ isRegistered, register }) => {
 
 const mapStateToProps = (state: any) => ({
   isRegistered: state.user.isRegistered
-})
+}) as Props
 
-const mapDispatchToProps = (dispatch: any) => ({
-  register: (profile: any) => dispatch(Actions.register(profile))
-})
+const mapDispatchToProps = (dispatch: Dispatch<any>) => ({
+  register: profile => dispatch(Actions.register(profile))
+}) as Props
 
-export default drizzleConnect(
+export const Home = drizzleConnect(
   Component,
   mapStateToProps,
   mapDispatchToProps

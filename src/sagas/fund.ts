@@ -7,16 +7,16 @@ function canSetFundData(payload: any): boolean {
   return (payload.type === 'CONTRACT_INITIALIZED' && payload.name === 'InsuranceFund')
 }
 
-function getFundData(InsuranceFundContract: any): any {
+function getFundData(InsuranceFundContract: any): string {
   return InsuranceFundContract.methods.getFund().call()
-    .then((fFund: any) => ({ fFund }))
-    .catch((fError: any) => ({ fError }))
+    .then((fFund: string) => ({ fFund }))
+    .catch((fError: string) => ({ fError }))
 }
 
-function getCompensationsData(InsuranceFundContract: any): any {
+function getCompensationsData(InsuranceFundContract: any): string {
   return InsuranceFundContract.methods.getCompensationsPaid().call()
-    .then((compensations: any) => ({ compensations }))
-    .catch((cError: any) => ({ cError }))
+    .then((compensations: string) => ({ compensations }))
+    .catch((cError: string) => ({ cError }))
 }
 
 function* setFundData(): IterableIterator<Effect> {

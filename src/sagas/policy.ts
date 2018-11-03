@@ -1,6 +1,8 @@
 import { Effect, call, select, put, getContext, takeEvery } from 'redux-saga/effects'
 import * as Policy from '../contracts/Policy.json'
 import * as Actions from '../actions'
+import { Policy as PolicyType, PolicyShort } from 'src/types/index.js'
+import { Action } from 'typescript-fsa'
 
 // Load Policy Contract
 function canLoadPolicyContract(payload: any): boolean {
@@ -10,7 +12,7 @@ function canLoadPolicyContract(payload: any): boolean {
 
 function getPolicyContract(drizzle: any, account: any, UserContract: any): boolean {
   return UserContract.methods.getPolicy().call()
-    .then((policy: any) => {
+    .then((policy: PolicyType) => {
         var contractConfig = {
           contractName: 'Policy',
           web3Contract: new drizzle.web3.eth.Contract(
@@ -23,7 +25,7 @@ function getPolicyContract(drizzle: any, account: any, UserContract: any): boole
         return true
       }
     )
-    .catch((error: any) => {
+    .catch((error: string) => {
       console.error(error)
       return false
     })
@@ -37,7 +39,7 @@ function* loadPolicyContract(): IterableIterator<Effect> {
 }
 
 // Create policy
-function* createPolicy({ payload }: any): IterableIterator<Effect> {
+function* createPolicy({ payload }: Action<PolicyShort>): IterableIterator<Effect> {
   const drizzle = yield getContext('drizzle')
   drizzle.contracts.User.methods.createPolicy(
     Date.now(),
@@ -52,10 +54,10 @@ function canInitPolicy(payload: any): boolean {
   return (payload.type === 'CONTRACT_INITIALIZED' && payload.name === 'Policy')
 }
 
-function getPolicy(PolicyContract: any): any {
+function getPolicy(PolicyContract: any): PolicyType | string {
   return PolicyContract.methods.getPolicyInfo().call()
-    .then((policy: any) => ({ policy }))
-    .catch((error: any) => ({ error }))
+    .then((policy: PolicyType) => ({ policy }))
+    .catch((error: string) => ({ error }))
 }
 
 function* initPolicy(): IterableIterator<Effect> {
@@ -70,7 +72,7 @@ function* initPolicy(): IterableIterator<Effect> {
 }
 
 // Pay premium
-function* payPremium({ payload }: any): IterableIterator<Effect> {
+function* payPremium({ payload }: Action<number>): IterableIterator<Effect> {
   const account = yield select<any>(state => state.accounts[0])
   const drizzle = yield getContext('drizzle')
   drizzle.contracts.User.methods.payPremium().send({
@@ -99,7 +101,7 @@ function canSubmitCancelledPolicy(payload: any): boolean {
   return payload.type === 'EVENT_FIRED' && payload.name === 'Policy' && payload.event.event === 'PolicyCancelled'
 }
 
-function* submitCancelledPolicy(payload: any): IterableIterator<Effect> {
+function* submitCancelledPolicy(): IterableIterator<Effect> {
   yield put(Actions.submitCancelledPolicy({}))
 }
 

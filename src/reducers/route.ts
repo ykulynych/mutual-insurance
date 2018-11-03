@@ -1,7 +1,7 @@
 import { reducerWithInitialState } from 'typescript-fsa-reducers'
 
 import * as Actions from '../actions'
-import { Route, Routes } from '../pages/routes/types'
+import { Route, Routes } from '../types'
 
 export default reducerWithInitialState<Route>(null)
   .case(Actions.routeHome, () => Routes.HOME)

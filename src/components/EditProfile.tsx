@@ -15,6 +15,7 @@ import {
   WithStyles,
   StyleRulesCallback
 } from '@material-ui/core'
+import { Profile } from '../types'
 
 const styles: StyleRulesCallback = theme => ({
   mgt15: {
@@ -23,12 +24,16 @@ const styles: StyleRulesCallback = theme => ({
 })
 
 interface Props extends WithStyles<typeof styles> {
-  name: string,
-  description: string,
-  onAccept: (profile: any) => any
+  name: string
+  description: string
+  onAccept: (profile: Profile) => any
 }
 
-class Component extends React.Component<Props> {
+interface State extends Profile {
+  open: boolean
+}
+
+class Component extends React.Component<Props, State> {
   state = {
     open: false,
     name: 'Юра',
@@ -47,12 +52,12 @@ class Component extends React.Component<Props> {
 
   accept = () => {
     this.setState({ open: false })
-    this.props.onAccept([
-      this.state.name,
-      Date.parse(this.state.birthDate),
-      this.state.city,
-      this.state.gender,
-    ])
+    this.props.onAccept({
+      name: this.state.name,
+      birthDate: Date.parse(this.state.birthDate as string),
+      city: this.state.city,
+      gender: this.state.gender,
+    })
   }
 
   handleChangeName = (event: any) => {

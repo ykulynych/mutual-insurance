@@ -18,6 +18,8 @@ import {
 } from '@material-ui/core'
 import * as Actions from '../actions'
 import { drizzleConnect } from 'drizzle-react'
+import { PolicyShort } from 'src/types'
+import { Dispatch } from 'redux'
 
 const styles: StyleRulesCallback = theme => ({
   mgt15: {
@@ -26,10 +28,14 @@ const styles: StyleRulesCallback = theme => ({
 })
 
 interface Props extends WithStyles<typeof styles> {
-  createPolicy: (policy: any) => any
+  createPolicy: (policy: PolicyShort) => any
 }
 
-class Component extends React.Component<Props> {
+interface State extends PolicyShort {
+  open: boolean
+}
+
+class Component extends React.Component<Props, State> {
   state = {
     open: false,
     premium: 0,
@@ -55,7 +61,7 @@ class Component extends React.Component<Props> {
   }
 
   handleChangeDuration = (event: any) => {
-    this.setState((prevState: any) => ({ 
+    this.setState((prevState: State) => ({ 
       duration: event.target.value,
       compensation: prevState.premium * 100 / event.target.value
     }))
@@ -63,7 +69,7 @@ class Component extends React.Component<Props> {
 
   handleChangePremium = (event: any) => {
     const value = event.target.value || 0
-    this.setState((prevState: any) => ({ 
+    this.setState((prevState: State) => ({ 
       premium: value,
       compensation: value * 100 / prevState.duration
     }))
@@ -128,9 +134,9 @@ class Component extends React.Component<Props> {
   }
 }
 
-const mapDispatchToProps = (dispatch: any) => ({
-  createPolicy: (policy: any) => dispatch(Actions.createPolicy(policy))
-})
+const mapDispatchToProps = (dispatch: Dispatch<any>) => ({
+  createPolicy: policy => dispatch(Actions.createPolicy(policy))
+}) as Props
 
 export const CreatePolicy = drizzleConnect(
   withStyles(styles)<Props>(Component),

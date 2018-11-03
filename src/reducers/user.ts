@@ -1,7 +1,8 @@
 import { reducerWithInitialState } from 'typescript-fsa-reducers'
 import * as Actions from '../actions'
+import { User } from 'src/types'
 
-const initState = (): any => ({
+const initState = (): User => ({
   isRegistered: false,
   hasPolicy: false,
   canWithdraw: false,
@@ -11,31 +12,31 @@ const initState = (): any => ({
   gender: ''
 })
 
-export const user = reducerWithInitialState<any>(
+export const user = reducerWithInitialState<User>(
   initState()
 )  
-  .case(Actions.initProfile, (state, data) => ({
+  .case(Actions.initProfile, (state, user) => ({
     ...state,
     isRegistered: true,
-    name: data.name,
-    birthDate: new Date(parseInt(data.birthDate, 10)).toISOString().slice(0, 10),
-    city: data.city,
-    gender: data.gender
+    name: user.name,
+    birthDate: new Date(parseInt(user.birthDate as string, 10)).toISOString().slice(0, 10),
+    city: user.city,
+    gender: user.gender
   }))
-  .case(Actions.initPolicy, (state, data) => ({
+  .case(Actions.initPolicy, (state) => ({
     ...state,
     hasPolicy: true
   }))
-  .case(Actions.submitCancelledPolicy, (state, data) => ({
+  .case(Actions.submitCancelledPolicy, (state) => ({
     ...state,
     hasPolicy: false
   }))
-  .cases([Actions.submitReportedEvent, Actions.canWithdrawCompensation], (state, data) => ({
+  .cases([Actions.submitReportedEvent, Actions.canWithdrawCompensation], (state) => ({
     ...state,
     canWithdraw: true,
     hasPolicy: false
   }))
-  .case(Actions.gotCompensation, (state, data) => ({
+  .case(Actions.gotCompensation, (state) => ({
     ...state,
     canWithdraw: false
   }))

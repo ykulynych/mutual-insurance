@@ -3,6 +3,8 @@ import { Card, CardContent, Button, CardActions, Typography, StyleRulesCallback,
 import { drizzleConnect } from 'drizzle-react'
 import * as Actions from '../actions'
 import { PayPremium } from '../components/PayPremium'
+import { Dispatch } from 'redux'
+import { Policy as PolicyType } from 'src/types'
 
 const styles: StyleRulesCallback = theme => ({
   container: {
@@ -11,7 +13,7 @@ const styles: StyleRulesCallback = theme => ({
 })
 
 interface Props extends WithStyles<typeof styles> {
-  policy: any
+  policy: PolicyType
   cancelPolicy: () => any
   reportEvent: () => any
 }
@@ -51,12 +53,12 @@ const mapStateToProps = (state: any) => ({
   policy: state.policy
 })
 
-const mapDispatchToProps = (dispatch: any) => ({
+const mapDispatchToProps = (dispatch: Dispatch<any>) => ({
   cancelPolicy: () => dispatch(Actions.cancelPolicy({})),
   reportEvent: () => dispatch(Actions.reportEvent({}))
 })
 
-export default drizzleConnect(
+export const Policy = drizzleConnect(
   Component,
   mapStateToProps,
   mapDispatchToProps

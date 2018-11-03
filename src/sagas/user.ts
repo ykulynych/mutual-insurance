@@ -1,5 +1,46 @@
-import { Effect, call, put, getContext, takeEvery } from 'redux-saga/effects'
+import { Effect, call, select, put, getContext, takeEvery } from 'redux-saga/effects'
 import * as Actions from '../actions'
+import { Profile } from 'src/types'
+import { Action } from 'typescript-fsa'
+import * as User from '../contracts/User.json'
+
+// Load User contract
+
+function canLoadUserContract(payload: any): boolean {
+  return (payload.type === 'CONTRACT_INITIALIZED' && payload.name === 'UserRegistry') ||
+    (payload.type === 'EVENT_FIRED' && payload.name === 'UserRegistry' && payload.event.event === 'UserRegistered')
+}
+
+function getUserContract(drizzle: any, account: any, UserRegistryContract: any): boolean {
+  return UserRegistryContract.methods.me().call()
+    .then((me: string) => {
+        if (me === '0x0000000000000000000000000000000000000000') {
+          return false
+        }
+        var contractConfig = {
+          contractName: 'User',
+          web3Contract: new drizzle.web3.eth.Contract(
+            User.abi,
+            me,
+            { from: account, data: User.deployedBytecode }
+          )
+        }
+        drizzle.addContract(contractConfig, ['UserProfileUpdated', 'PolicyCreated'])
+        return true
+      }
+    )
+    .catch((error: string) => {
+      console.error(error)
+      return false
+    })
+}
+
+function* loadUserContract(): IterableIterator<Effect> {
+  const account = yield select<any>(state => state.accounts[0])
+  const drizzle = yield getContext('drizzle')
+  const res = yield call(getUserContract, drizzle, account, drizzle.contracts.UserRegistry)
+  console.log('Load User contract', res)
+}
 
 // Init User Profile
 
@@ -7,10 +48,10 @@ function canInitUserProfile(payload: any): boolean {
   return (payload.type === 'CONTRACT_INITIALIZED' && payload.name === 'User')
 }
 
-function getUserProfile(UserContract: any): any {
+function getUserProfile(UserContract: any): Profile | string {
   return UserContract.methods.getProfileInfo().call()
-    .then((profile: any) => ({ profile }))
-    .catch((error: any) => ({ error }))
+    .then((profile: Profile) => ({ profile }))
+    .catch((error: string) => ({ error }))
 }
 
 function* initUserProfile(): IterableIterator<Effect> {
@@ -36,15 +77,25 @@ function* getUserProfileUpdate(payload: any): IterableIterator<Effect> {
 
 // Update User profile
 
-function* updateUserProfile({ payload }: any): IterableIterator<Effect> {
+function* updateUserProfile({ payload }: Action<Profile>): IterableIterator<Effect> {
   const drizzle = yield getContext('drizzle')
-  drizzle.contracts.User.methods.setProfileInfo(...payload).send()
+  drizzle.contracts.User.methods.setProfileInfo(
+    payload.name,
+    payload.birthDate,
+    payload.city,
+    payload.gender
+  ).send()
 }
 
 // Register User
-function* registerUser({ payload }: any): IterableIterator<Effect> {
+function* registerUser({ payload }: Action<Profile>): IterableIterator<Effect> {
   const drizzle = yield getContext('drizzle')
-  drizzle.contracts.UserRegistry.methods.register(...payload).send()
+  drizzle.contracts.UserRegistry.methods.register(
+    payload.name,
+    payload.birthDate,
+    payload.city,
+    payload.gender
+  ).send()
 }
 
 // Check for compensation
@@ -54,8 +105,8 @@ function canCheckForCompensation(payload: any): boolean {
 
 function checkForCompensation(InsuranceFundContract: any): boolean {
   return InsuranceFundContract.methods.checkCompensation().call()
-    .then((isCompensation: any) => ({ isCompensation }))
-    .catch((error: any) => ({ error }))
+    .then((isCompensation: boolean) => ({ isCompensation }))
+    .catch((error: string) => ({ error }))
 }
 
 function* canWithdrawCompensation(): IterableIterator<Effect> {
@@ -77,6 +128,7 @@ function* withdrawCompensation(): IterableIterator<Effect> {
 }
 
 export function* user(): IterableIterator<Effect> {
+  yield takeEvery(canLoadUserContract, loadUserContract)
   yield takeEvery(canInitUserProfile, initUserProfile)
   yield takeEvery(canGetUserProfileUpdate, getUserProfileUpdate)
   yield takeEvery(Actions.updateProfile, updateUserProfile)

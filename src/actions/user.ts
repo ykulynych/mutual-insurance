@@ -1,10 +1,11 @@
 import actionCreatorFactory from 'typescript-fsa'
+import { Profile } from 'src/types'
 
 const actionCreator = actionCreatorFactory('USER')
 
-export const initProfile = actionCreator<any>('INIT_PROFILE')
-export const updateProfile = actionCreator<any>('UPDATE_PROFILE')
-export const register = actionCreator<any>('REGISTER')
-export const withdrawCompensation = actionCreator<any>('WITHDRAW')
-export const gotCompensation = actionCreator<any>('GOT_WITHDRAW')
-export const canWithdrawCompensation = actionCreator<any>('CAN_WITHDRAW_COMPENSATION')
+export const initProfile = actionCreator<Profile>('INIT_PROFILE')
+export const updateProfile = actionCreator<Profile>('UPDATE_PROFILE')
+export const register = actionCreator<Profile>('REGISTER')
+export const withdrawCompensation = actionCreator<{}>('WITHDRAW_COMPENSATION')
+export const gotCompensation = actionCreator<{}>('GOT_COMPENSATION')
+export const canWithdrawCompensation = actionCreator<{}>('CAN_WITHDRAW_COMPENSATION')

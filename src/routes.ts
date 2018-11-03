@@ -2,7 +2,7 @@ import * as router from 'redux-first-router'
 // import { createBrowserHistory } from 'history'
 // import * as querystring from 'querystring'
 
-import { Routes, RoutesMap } from './pages/routes/types'
+import { Routes, RoutesMap } from './types'
 
 // const history = createBrowserHistory()
 

@@ -1,8 +1,15 @@
 import { Component, Children } from 'react'
 import * as PropTypes from 'prop-types'
 import { Drizzle, generateStore } from 'drizzle'
+import { Store } from 'redux'
 
-export class DrizzleProvider extends Component {
+interface Props {
+  store: Store
+  drizzle: any
+  options?: any
+} // TODO: types
+
+export class DrizzleProvider extends Component<Props> {
   static propTypes = {
     drizzle: PropTypes.object,
     store: PropTypes.object
@@ -14,13 +21,13 @@ export class DrizzleProvider extends Component {
     drizzleStore: PropTypes.object.isRequired
   }
 
-  constructor(context, props) {
+  constructor(context: any, props: any) {
     super(context, props)
   }
 
   getChildContext() {
     const drizzleStore = this.props.store ? this.props.store : generateStore(this.props.options)
-    const drizzle = this.props.drizzle || new Drizzle(this.props.options, store)
+    const drizzle = this.props.drizzle || new Drizzle(this.props.options, this.props.store)
     return { drizzle, drizzleStore }
   }
 

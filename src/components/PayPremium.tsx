@@ -10,6 +10,7 @@ import {
   withStyles,
   WithStyles,
   StyleRulesCallback,
+  InputAdornment,
 } from '@material-ui/core'
 import * as Actions from '../actions'
 import { drizzleConnect } from 'drizzle-react'
@@ -69,6 +70,9 @@ class Component extends React.Component<Props> {
               fullWidth
               className={classes.mgt15}
               disabled
+              InputProps={{
+                endAdornment: <InputAdornment position='end'>ETH</InputAdornment>,
+              }}
             />
           </DialogContent>
           <DialogActions>

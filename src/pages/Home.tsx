@@ -1,43 +1,56 @@
 import * as React from 'react'
-import { Theme, withStyles, StyleRulesCallback, WithStyles } from '@material-ui/core/styles'
+import { Theme, withStyles, StyleRulesCallback, WithStyles, CardActions, CardContent, Typography } from '@material-ui/core'
 import { drizzleConnect } from 'drizzle-react'
 import * as Actions from '../actions'
 import { EditProfile } from '../components/EditProfile'
-import { Profile } from 'src/types'
+import { Profile, User } from 'src/types'
 import { Dispatch } from 'redux'
 
 const styles: StyleRulesCallback = (theme: Theme) => ({})
 
 interface Props extends WithStyles<typeof styles> {
-  isRegistered: boolean,
+  user: User,
   register: (profile: Profile) => any
 }
 
-const Component = withStyles(styles)<Props>(({ isRegistered, register }) => {
-  if (!isRegistered) {
+const Component = withStyles(styles)<Props>(({ user, register }) => {
+  if (!user.isRegistered) {
     return (
-      <div>
-        <h2>Доброго дня! Зареєструйтесь, будь-ласка.</h2>
-        <p>Реєстрація необхідна!</p>
-        <EditProfile
-          name='Зареєструватись'
-          description='Реєстрація потрібна для подальшої роботи.'
-          onAccept={register}
-        />
-      </div>
+      <>
+        <CardContent>
+          <Typography variant='title'>
+            Доброго дня! Зареєструйтесь, будь-ласка.
+          </Typography>
+          <Typography variant='subheading' >
+            Реєстрація необхідна!
+          </Typography>
+        </CardContent>
+        <CardActions>
+          <EditProfile
+            name='Зареєструватись'
+            description='Реєстрація потрібна для подальшої роботи.'
+            user={user}
+            onAccept={register}
+          />
+        </CardActions>
+      </>
     )
   } else {
     return (
-      <div>
-          <h2>Доброго дня! Вітаємо, ви успішно зареєстровані!</h2>
-          <p>Дякуємо за реєстацію!</p>
-      </div>
+      <CardContent>
+        <Typography variant='title'>
+          Доброго дня! Вітаємо, ви успішно зареєстровані!
+        </Typography>
+        <Typography variant='subheading' >
+          Дякуємо за реєстацію!
+        </Typography>
+      </CardContent>
     )
   }
 })
 
 const mapStateToProps = (state: any) => ({
-  isRegistered: state.user.isRegistered
+  user: state.user
 }) as Props
 
 const mapDispatchToProps = (dispatch: Dispatch<any>) => ({

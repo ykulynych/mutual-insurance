@@ -1,6 +1,6 @@
 import { reducerWithInitialState } from 'typescript-fsa-reducers'
 import * as Actions from '../actions'
-import { User } from 'src/types'
+import { User, City, UaGender } from 'src/types'
 
 const initState = (): User => ({
   isRegistered: false,
@@ -8,8 +8,8 @@ const initState = (): User => ({
   canWithdraw: false,
   name: '',
   birthDate: '',
-  city: '',
-  gender: ''
+  city: City.Львівська,
+  gender: UaGender.Чоловік
 })
 
 export const user = reducerWithInitialState<User>(

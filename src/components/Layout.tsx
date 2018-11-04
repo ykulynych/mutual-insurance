@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core'
+import { StyleRulesCallback, withStyles, WithStyles, Card } from '@material-ui/core'
 import { TopBar } from './TopBar'
 
 const styles: StyleRulesCallback = theme => ({
@@ -17,6 +17,9 @@ const styles: StyleRulesCallback = theme => ({
     minWidth: 0, // So the Typography noWrap works
     paddingTop: 64,
   },
+  container: {
+    marginTop: 24
+  }
 })
 
 interface Props extends WithStyles<typeof styles> {
@@ -26,6 +29,10 @@ interface Props extends WithStyles<typeof styles> {
 export const Layout = withStyles(styles)<Props>(({ classes, children }) => (
   <div className={classes.root}>
     <TopBar />
-    <main className={classes.content}>{children}</main>
+    <main className={classes.content}>
+      <Card className={classes.container}>
+        {children}
+      </Card>
+    </main>
   </div>
 ))

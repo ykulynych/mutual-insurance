@@ -44,7 +44,7 @@ function* createPolicy({ payload }: Action<PolicyShort>): IterableIterator<Effec
   drizzle.contracts.User.methods.createPolicy(
     Date.now(),
     payload.duration * 31557600000, // ms in year
-    (payload.premium * 1e18).toString(),
+    Math.round(payload.premium * 1e18).toString(),
     (payload.compensation * 1e18).toString()
   ).send()
 }

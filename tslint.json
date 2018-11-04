@@ -99,7 +99,8 @@
 	},
 	"linterOptions": {
 		"exclude": [
-			"src/contracts/*.json"
+			"src/contracts/*.json",
+			"src/assets/*.json"
 		]
 	}
 }

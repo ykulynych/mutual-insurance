@@ -1,5 +1,16 @@
 import * as React from 'react'
-import { Card, CardContent, Button, CardActions, Typography, StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core'
+import { 
+  CardContent,
+  Button,
+  CardActions,
+  StyleRulesCallback,
+  withStyles,
+  WithStyles,
+  Table,
+  TableBody,
+  TableCell,
+  TableRow
+} from '@material-ui/core'
 import { drizzleConnect } from 'drizzle-react'
 import * as Actions from '../actions'
 import { EditProfile } from '../components/EditProfile'
@@ -7,11 +18,7 @@ import { CreatePolicy } from '../components/CreatePolicy'
 import { Profile as ProfileType, User } from 'src/types'
 import { Dispatch } from 'redux'
 
-const styles: StyleRulesCallback = theme => ({
-  container: {
-    marginTop: 24
-  }
-})
+const styles: StyleRulesCallback = theme => ({})
 
 interface Props extends WithStyles<typeof styles> {
   user: User
@@ -20,25 +27,34 @@ interface Props extends WithStyles<typeof styles> {
 }
 
 const Component = withStyles(styles)<Props>(({ user, updateProfile, withdraw, classes }) => (
-  <Card className={classes.container}>
+  <>
     <CardContent>
-      <Typography variant='headline' component='h2'>
-        {user.name}
-      </Typography>
-      <Typography variant='headline' component='h2'>
-        {user.gender}
-      </Typography>
-      <Typography variant='headline' component='h2'>
-        {user.city}
-      </Typography>
-      <Typography variant='headline' component='h2'>
-        {user.birthDate}
-      </Typography>
+      <Table>
+        <TableBody >
+          <TableRow>
+              <TableCell>Ім`я:</TableCell>
+              <TableCell>{user.name}</TableCell>
+          </TableRow>
+          <TableRow selected>
+              <TableCell>Стать:</TableCell>
+              <TableCell>{user.gender}</TableCell>
+          </TableRow>
+          <TableRow>
+              <TableCell>Область:</TableCell>
+              <TableCell>{user.city}</TableCell>
+          </TableRow>
+          <TableRow selected>
+              <TableCell>Дата народження:</TableCell>
+              <TableCell>{user.birthDate}</TableCell>
+          </TableRow>
+        </TableBody>
+      </Table>
     </CardContent>
     <CardActions>
       <EditProfile
          name='Редагувати профіль'
          description='Якщо ви ввели неправильні дані, можете їх виправити.'
+         user={user}
          onAccept={updateProfile}
       />
       {!user.hasPolicy && <CreatePolicy />}
@@ -48,7 +64,7 @@ const Component = withStyles(styles)<Props>(({ user, updateProfile, withdraw, cl
         </Button>
       }
     </CardActions>
-  </Card>
+  </>
 ))
 
 const mapStateToProps = (state: any) => ({

@@ -7,19 +7,17 @@ import {
   DialogContent,
   DialogContentText,
   DialogTitle,
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
   withStyles,
   WithStyles,
   StyleRulesCallback,
-  Typography
+  Typography,
+  InputAdornment
 } from '@material-ui/core'
 import * as Actions from '../actions'
 import { drizzleConnect } from 'drizzle-react'
-import { PolicyShort } from 'src/types'
+import { PolicyShort, User } from 'src/types'
 import { Dispatch } from 'redux'
+import { calculateMonthPremium } from 'src/utils'
 
 const styles: StyleRulesCallback = theme => ({
   mgt15: {
@@ -28,6 +26,7 @@ const styles: StyleRulesCallback = theme => ({
 })
 
 interface Props extends WithStyles<typeof styles> {
+  user: User
   createPolicy: (policy: PolicyShort) => any
 }
 
@@ -60,19 +59,48 @@ class Component extends React.Component<Props, State> {
     })
   }
 
-  handleChangeDuration = (event: any) => {
-    this.setState((prevState: State) => ({ 
-      duration: event.target.value,
-      compensation: prevState.premium * 100 / event.target.value
-    }))
+  handleChangeDuration(stringDuration: string) {
+    if (this.wrongDuration(stringDuration)) {
+      this.setState({ duration: stringDuration as any }) // we should put here a string not a number
+    } else {
+      const duration = parseInt(stringDuration, 10)
+      const { city, gender, birthDate } = this.props.user
+      this.setState((prevState: State) => ({ 
+        duration,
+        premium: calculateMonthPremium(prevState.compensation, duration, city, gender, birthDate as string)
+      }))
+    }
   }
 
-  handleChangePremium = (event: any) => {
-    const value = event.target.value || 0
-    this.setState((prevState: State) => ({ 
-      premium: value,
-      compensation: value * 100 / prevState.duration
-    }))
+  handleChangeCompensation(stringCompensation: string) {
+    if (this.wrongCompensation(stringCompensation)) {
+      this.setState({ compensation: stringCompensation as any })
+    } else {
+      const compensation = parseFloat(stringCompensation)
+      const { city, gender, birthDate } = this.props.user
+      this.setState((prevState: State) => ({
+        compensation,
+        premium: calculateMonthPremium(compensation, prevState.duration, city, gender, birthDate as string)
+      }))
+    }
+  }
+
+  wrongDuration(duration: string | number): boolean {
+    const intDuration = parseInt(duration as string, 10)
+    return !duration || intDuration < 1 || intDuration > 20
+  }
+
+  wrongCompensation(compensation: string | number): boolean {
+    const intCompensation = parseInt(compensation as string, 10)
+    return !intCompensation || intCompensation <= 0 || intCompensation > 100
+  }
+
+  checkWrongDuration(): boolean {
+    return this.wrongDuration(this.state.duration)
+  }
+
+  checkWrongCompensation(): boolean {
+    return this.wrongCompensation(this.state.compensation)
   }
 
   render() {
@@ -90,41 +118,46 @@ class Component extends React.Component<Props, State> {
             <DialogContentText>
               Створюйте поліс обережно!
             </DialogContentText>
-            <FormControl fullWidth className={classes.mgt15}>
-              <InputLabel htmlFor='duration-simple'>Тривалість</InputLabel>
-              <Select
-                value={this.state.duration}
-                onChange={this.handleChangeDuration}
-                inputProps={{
-                  name: 'duration',
-                  id: 'duration-simple',
-                }}
-              >
-                <MenuItem value={10}>10 років</MenuItem>
-                <MenuItem value={15}>15 років</MenuItem>
-                <MenuItem value={20}>20 років</MenuItem>
-              </Select>
-            </FormControl>
             <TextField 
               autoFocus
-              value={this.state.premium}
-              onChange={this.handleChangePremium}
-              margin='dense'
-              id='premium'
-              label='Щомісячна оплата'
+              value={this.state.duration}
+              onChange={e => this.handleChangeDuration(e.target.value)}
+              label='Тривалість полісу'
               type='number' 
               fullWidth
               className={classes.mgt15}
+              required
+              error={this.checkWrongDuration()}
+              InputProps={{
+                endAdornment: <InputAdornment position='end'>Років</InputAdornment>,
+              }}
             />
-            <Typography variant='headline' component='h2' className={classes.mgt15}>
-              Компенсація: {this.state.compensation}
+            <TextField 
+              value={this.state.compensation}
+              onChange={e => this.handleChangeCompensation(e.target.value)}
+              label='Компенсація'
+              type='number'
+              fullWidth
+              className={classes.mgt15}
+              required
+              error={this.checkWrongCompensation()}
+              InputProps={{
+                endAdornment: <InputAdornment position='end'>ETH</InputAdornment>,
+              }}
+            />
+            <Typography variant='subheading' component='h3' className={classes.mgt15}>
+              {`Щомісячна оплата: ${this.state.premium.toFixed(5)} ETH`}
             </Typography>
           </DialogContent>
           <DialogActions>
             <Button onClick={this.cancel} color='secondary'>
               Відмінити
             </Button>
-            <Button onClick={this.accept} color='primary'>
+            <Button
+              onClick={this.accept}
+              color='primary'
+              disabled={this.checkWrongDuration() || this.checkWrongCompensation()}
+            >
               Підтвердити
             </Button>
           </DialogActions>
@@ -134,12 +167,16 @@ class Component extends React.Component<Props, State> {
   }
 }
 
+const mapStateToProps = (state: any) => ({
+  user: state.user
+}) as Props
+
 const mapDispatchToProps = (dispatch: Dispatch<any>) => ({
   createPolicy: policy => dispatch(Actions.createPolicy(policy))
 }) as Props
 
 export const CreatePolicy = drizzleConnect(
   withStyles(styles)<Props>(Component),
-  null,
+  mapStateToProps,
   mapDispatchToProps
 )

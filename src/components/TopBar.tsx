@@ -23,20 +23,20 @@ const Component = withStyles(styles)<Props>(({ fund, user, toHome, toProfile, to
     <Toolbar className={classes.toolBar}>
       <div>
         <Typography variant='body1' color='inherit' component='h4'>
-          {`Розмір страхового фонду: ${fund.fund} ETH`}
+          {`Розмір страхового фонду: ${fund.fund.toFixed(5)} ETH`}
         </Typography>
         <Typography variant='body1' color='inherit' component='h4'>
-          {`Розмір виплачених компенсацій: ${fund.compensations} ETH`}
+          {`Розмір виплачених компенсацій: ${fund.compensations.toFixed(5)} ETH`}
         </Typography>
       </div>
       <div>
-        <Button color='inherit' onClick={() => toHome()}>
+        <Button color='inherit' onClick={toHome}>
           Головна
         </Button>
-        <Button color='inherit' onClick={() => toProfile()} disabled={!user.isRegistered}>
+        <Button color='inherit' onClick={toProfile} disabled={!user.isRegistered}>
           Профайл
         </Button>
-        <Button color='inherit' onClick={() => toPolicy()} disabled={!user.hasPolicy}>
+        <Button color='inherit' onClick={toPolicy} disabled={!user.hasPolicy}>
           Поліс
         </Button>
       </div>

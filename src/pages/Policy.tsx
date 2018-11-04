@@ -1,16 +1,23 @@
 import * as React from 'react'
-import { Card, CardContent, Button, CardActions, Typography, StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core'
+import {
+  CardContent,
+  Button,
+  CardActions,
+  StyleRulesCallback,
+  withStyles,
+  WithStyles,
+  Table,
+  TableBody,
+  TableCell,
+  TableRow
+} from '@material-ui/core'
 import { drizzleConnect } from 'drizzle-react'
 import * as Actions from '../actions'
 import { PayPremium } from '../components/PayPremium'
 import { Dispatch } from 'redux'
 import { Policy as PolicyType } from 'src/types'
 
-const styles: StyleRulesCallback = theme => ({
-  container: {
-    marginTop: 24
-  }
-})
+const styles: StyleRulesCallback = theme => ({})
 
 interface Props extends WithStyles<typeof styles> {
   policy: PolicyType
@@ -19,23 +26,32 @@ interface Props extends WithStyles<typeof styles> {
 }
 
 const Component = withStyles(styles)<Props>(({ policy, cancelPolicy, reportEvent, classes }) => (
-  <Card className={classes.container}>
+  <>
     <CardContent>
-      <Typography variant='headline' component='h2'>
-        {policy.startTime}
-      </Typography>
-      <Typography variant='headline' component='h2'>
-        {policy.endTime}
-      </Typography>
-      <Typography variant='headline' component='h2'>
-        {policy.timeOfNextPayement}
-      </Typography>
-      <Typography variant='headline' component='h2'>
-        {policy.premium / 1e18}
-      </Typography>
-      <Typography variant='headline' component='h2'>
-        {policy.compensation / 1e18}
-      </Typography>
+      <Table>
+        <TableBody >
+          <TableRow>
+              <TableCell>Поліс створено:</TableCell>
+              <TableCell>{policy.startTime}</TableCell>
+          </TableRow>
+          <TableRow selected>
+              <TableCell>Поліс діє до:</TableCell>
+              <TableCell>{policy.endTime}</TableCell>
+          </TableRow>
+          <TableRow>
+              <TableCell>Наступний внесок:</TableCell>
+              <TableCell>{policy.timeOfNextPayement}</TableCell>
+          </TableRow>
+          <TableRow selected>
+              <TableCell>Сума щомісячної оплати:</TableCell>
+              <TableCell>{`${(policy.premium / 1e18).toFixed(7)} ETH`}</TableCell>
+          </TableRow>
+          <TableRow>
+              <TableCell>Сума компенсації:</TableCell>
+              <TableCell>{`${(policy.compensation / 1e18).toFixed(5)} ETH`}</TableCell>
+          </TableRow>
+        </TableBody>
+      </Table>
     </CardContent>
     <CardActions>
       <PayPremium />
@@ -46,7 +62,7 @@ const Component = withStyles(styles)<Props>(({ policy, cancelPolicy, reportEvent
         Повідомити про страховий випадок
       </Button>
     </CardActions>
-  </Card>
+  </>
 ))
 
 const mapStateToProps = (state: any) => ({

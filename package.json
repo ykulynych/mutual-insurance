@@ -11,6 +11,7 @@
     "drizzle": "^1.2.4",
     "drizzle-react": "^1.2.0",
     "drizzle-react-components": "^1.2.0",
+    "moment": "^2.22.2",
     "prop-types": "^15.6.2",
     "querystring": "^0.2.0",
     "react": "^16.4.2",

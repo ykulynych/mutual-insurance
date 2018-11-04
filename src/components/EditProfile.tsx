@@ -15,7 +15,8 @@ import {
   WithStyles,
   StyleRulesCallback
 } from '@material-ui/core'
-import { Profile } from '../types'
+import { Profile, City, UaGender, User } from '../types'
+import { calculateAge } from 'src/utils'
 
 const styles: StyleRulesCallback = theme => ({
   mgt15: {
@@ -24,6 +25,7 @@ const styles: StyleRulesCallback = theme => ({
 })
 
 interface Props extends WithStyles<typeof styles> {
+  user: User
   name: string
   description: string
   onAccept: (profile: Profile) => any
@@ -36,10 +38,10 @@ interface State extends Profile {
 class Component extends React.Component<Props, State> {
   state = {
     open: false,
-    name: 'Юра',
-    city: 'Львів',
-    gender: 'Чоловік',
-    birthDate: new Date().toISOString().slice(0, 10)
+    name: this.props.user.name,
+    city: this.props.user.city,
+    gender: this.props.user.gender,
+    birthDate: this.props.user.birthDate
   }
 
   handleClickOpen = () => {
@@ -54,26 +56,35 @@ class Component extends React.Component<Props, State> {
     this.setState({ open: false })
     this.props.onAccept({
       name: this.state.name,
-      birthDate: Date.parse(this.state.birthDate as string),
+      birthDate: Date.parse(this.state.birthDate).toString(),
       city: this.state.city,
       gender: this.state.gender,
     })
   }
 
-  handleChangeName = (event: any) => {
-    this.setState({ name: event.target.value })
+  handleChangeName(name: string) {
+    this.setState({ name })
   }
 
-  handleChangeCity = (event: any) => {
-    this.setState({ city: event.target.value })
+  handleChangeCity(city: City) {
+    this.setState({ city })
   }
 
-  handleChangeGender = (event: any) => {
-    this.setState({ gender: event.target.value })
+  handleChangeGender(gender: UaGender) {
+    this.setState({ gender })
   }
 
-  handleChangeDate = (event: any) => {
-    this.setState({ birthDate: event.target.value })
+  handleChangeDate(birthDate: string) {
+    this.setState({ birthDate })
+  }
+
+  checkWrongName = (): boolean => {
+    return !this.state.name.length
+  }
+
+  checkWrongAge = (): boolean => {
+    const age = calculateAge(this.state.birthDate)
+    return (age < 18) || (age > 70)
   }
 
   render() {
@@ -94,40 +105,49 @@ class Component extends React.Component<Props, State> {
             <TextField 
               autoFocus
               value={this.state.name}
-              onChange={this.handleChangeName}
+              onChange={e => this.handleChangeName(e.target.value)}
               margin='dense'
               id='name'
               label='Ім`я'
               type='string' 
               fullWidth
+              required
+              error={this.checkWrongName()}
             />
-            <FormControl fullWidth className={classes.mgt15}>
-              <InputLabel htmlFor='city-simple'>Місто</InputLabel>
+            <FormControl fullWidth className={classes.mgt15} required>
+              <InputLabel htmlFor='city-simple'>Область</InputLabel>
               <Select
                 value={this.state.city}
-                onChange={this.handleChangeCity}
+                onChange={e => this.handleChangeCity(e.target.value as any)}
                 inputProps={{
                   name: 'city',
                   id: 'city-simple',
                 }}
               >
-                <MenuItem value='Львів'>Львів</MenuItem>
-                <MenuItem value='Київ'>Київ</MenuItem>
-                <MenuItem value='Полтава'>Полтава</MenuItem>
+                {
+                  Object.keys(City).map(key => {
+                    if (isNaN(Number(City[key]))) { return } // if enum return number
+                    return (<MenuItem value={key} key={key}>{key}</MenuItem>)
+                  })
+                }
               </Select>
             </FormControl>
-            <FormControl fullWidth className={classes.mgt15}>
+            <FormControl fullWidth className={classes.mgt15} required>
               <InputLabel htmlFor='gender-simple'>Стать</InputLabel>
               <Select
                 value={this.state.gender}
-                onChange={this.handleChangeGender}
+                onChange={e => this.handleChangeGender(e.target.value as any)}
                 inputProps={{
                   name: 'gender',
                   id: 'gender-simple',
                 }}
               >
-                <MenuItem value='Чоловік'>Чоловік</MenuItem>
-                <MenuItem value='Жінка'>Жінка</MenuItem>
+                {
+                  Object.keys(UaGender).map(key => {
+                    if (isNaN(Number(UaGender[key]))) { return } // if enum return number
+                    return (<MenuItem value={key} key={key}>{key}</MenuItem>)
+                  })
+                }
               </Select>
             </FormControl>
             <TextField
@@ -136,19 +156,25 @@ class Component extends React.Component<Props, State> {
               type='date'
               margin='dense'
               value={this.state.birthDate}
-              onChange={this.handleChangeDate}
+              onChange={e => this.handleChangeDate(e.target.value)}
               InputLabelProps={{
                 shrink: true
               }}
               fullWidth
               className={classes.mgt15}
+              error={this.checkWrongAge()}
+              required
             />
           </DialogContent>
           <DialogActions>
             <Button onClick={this.cancel} color='secondary'>
               Відмінити
             </Button>
-            <Button onClick={this.accept} color='primary'>
+            <Button
+              onClick={this.accept}
+              color='primary'
+              disabled={this.checkWrongAge() || this.checkWrongName()}
+            >
               Підтвердити
             </Button>
           </DialogActions>

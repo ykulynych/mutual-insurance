@@ -81,9 +81,9 @@ function* updateUserProfile({ payload }: Action<Profile>): IterableIterator<Effe
   const drizzle = yield getContext('drizzle')
   drizzle.contracts.User.methods.setProfileInfo(
     payload.name,
-    payload.birthDate,
     payload.city,
-    payload.gender
+    payload.gender,
+    Date.parse(payload.birthDate)
   ).send()
 }
 
@@ -92,9 +92,9 @@ function* registerUser({ payload }: Action<Profile>): IterableIterator<Effect> {
   const drizzle = yield getContext('drizzle')
   drizzle.contracts.UserRegistry.methods.register(
     payload.name,
-    payload.birthDate,
     payload.city,
-    payload.gender
+    payload.gender,
+    Date.parse(payload.birthDate)
   ).send()
 }
 

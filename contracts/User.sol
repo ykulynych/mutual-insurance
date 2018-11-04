@@ -7,18 +7,19 @@ import "./Policy.sol";
 contract User {
   struct Profile {
     string name;
-    uint birthDate;
     string city;
     string gender;
+    uint birthDate;
   }
 
   address public owner;
   UserRegistry public registry;
+  InsuranceFund public fund;
+
   Profile private _profile;
   Policy private _policy;
-  InsuranceFund private _fund;
 
-  event UserProfileUpdated(string name, uint birthDate, string city, string gender);
+  event UserProfileUpdated(string name, string city, string gender, uint birthDate);
   event PolicyCreated(Policy policy);
 
   modifier onlyOwner() {
@@ -27,7 +28,7 @@ contract User {
   }
 
   modifier havePolicy() {
-    require(_policy != 0x0000000000000000000000000000000000000000, "You don't have policy");
+    require(_policy != 0x0000000000000000000000000000000000000000, "You don't have a policy.");
     _;
   }
 
@@ -35,9 +36,9 @@ contract User {
     address owner_,
     InsuranceFund fund_,
     string name_,
-    uint birthDate_,
     string city_,
-    string gender_
+    string gender_,
+    uint birthDate_
   ) public {
     require(address(owner_) != 0x0, "Wrong address");
     require(msg.sender != 0x0, "Wrong address.");
@@ -46,18 +47,19 @@ contract User {
     _profile.birthDate = birthDate_;
     _profile.city = city_;
     _profile.gender = gender_;
+  
     owner = owner_;
-    _fund = fund_;
+    fund = fund_;
     registry = UserRegistry(msg.sender);
   }
 
   function getProfileInfo() public view onlyOwner returns (
     string name,
-    uint birthDate,
     string city,
-    string gender
+    string gender,
+    uint birthDate
   ) {
-    return (_profile.name, _profile.birthDate, _profile.city, _profile.gender);
+    return (_profile.name, _profile.city, _profile.gender, _profile.birthDate);
   }
 
   function setProfileInfo(
@@ -71,14 +73,16 @@ contract User {
     _profile.city = city;
     _profile.gender = gender;
 
-    emit UserProfileUpdated(name, birthDate, city, gender);
+    emit UserProfileUpdated(name, city, gender, birthDate);
   }
 
-  function createPolicy(uint currentTime, uint duration, uint premium, uint compensation) public onlyOwner {
-    // require(_profile.birthDate < 18 * 365.25 days, "You are too young to do this.");
-    // require(duration > 30 * 365.25 days, "Too long policy");
-    // require(compensation > 10000 ether, "Too big compensation");
-    // TODO: check if policy exist
+  function createPolicy(
+    uint currentTime,
+    uint duration,
+    uint premium,
+    uint compensation
+  ) public onlyOwner {
+    require(_policy == 0x0000000000000000000000000000000000000000, "You already have a policy!");
 
     Policy policy = new Policy(
       msg.sender,
@@ -87,7 +91,7 @@ contract User {
       currentTime + duration,
       premium,
       compensation,
-      _fund
+      fund
     );
 
     _policy = policy;

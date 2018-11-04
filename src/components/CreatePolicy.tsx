@@ -91,7 +91,7 @@ class Component extends React.Component<Props, State> {
   }
 
   wrongCompensation(compensation: string | number): boolean {
-    const intCompensation = parseInt(compensation as string, 10)
+    const intCompensation = parseFloat(compensation as string)
     return !intCompensation || intCompensation <= 0 || intCompensation > 100
   }
 

@@ -5,23 +5,23 @@ import "./InsuranceFund.sol";
 
 contract UserRegistry {
   mapping(address => User) private users;
-  InsuranceFund private _fund;
+  InsuranceFund public fund;
 
   event UserRegistered(User user);
 
   constructor(InsuranceFund fund_) public {
-    _fund = fund_;
+    fund = fund_;
   }
 
   function me() external view returns (User) {
     return users[msg.sender];
   }
 
-  function register(string name, uint birthDate, string city, string gender) public {
+  function register(string name, string city, string gender, uint birthDate) public {
     require(msg.sender != 0x0, "Wrong address.");
     require(address(users[msg.sender]) == 0x0, "You already registered.");
 
-    User user = new User(msg.sender, _fund, name, birthDate, city, gender);
+    User user = new User(msg.sender, fund, name, city, gender, birthDate);
     users[msg.sender] = user;
 
     emit UserRegistered(user);

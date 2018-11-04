@@ -5,7 +5,7 @@ import "./User.sol";
 contract InsuranceFund {
   uint fund;
   uint compensationsPaid;
-
+  
   mapping(address => uint) pendingReturns;
 
   event CompensationPaid(address user, uint compensation);

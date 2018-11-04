@@ -56,7 +56,7 @@ class Component extends React.Component<Props, State> {
     this.setState({ open: false })
     this.props.onAccept({
       name: this.state.name,
-      birthDate: Date.parse(this.state.birthDate).toString(),
+      birthDate: this.state.birthDate,
       city: this.state.city,
       gender: this.state.gender,
     })

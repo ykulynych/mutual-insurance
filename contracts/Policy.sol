@@ -21,9 +21,10 @@ contract Policy {
 
   address public owner;
   address public ownerContract;
+  InsuranceFund public fund;
+
   PolicyInfo private _policy;
   Status private _status;
-  InsuranceFund private _fund;
 
   event InsuredEvent(address owner, uint compensation);
   event PolicyCancelled(address owner);
@@ -49,6 +50,9 @@ contract Policy {
     uint compensation_,
     InsuranceFund fund_
   ) public {
+    require(endTime_ - startTime_ < 631152000000, "Too long policy"); // Should be less than 20 years
+    require(compensation_ < 100 ether, "Too big compensation");
+
     owner = owner_;
     ownerContract = ownerContract_;
     _policy = PolicyInfo({
@@ -59,7 +63,7 @@ contract Policy {
       timeOfNextPayement: startTime_
     });
     _status = Status.Ongoing;
-    _fund = fund_;
+    fund = fund_;
   }
 
   function getPolicyInfo() public view onlyOwner returns(
@@ -73,12 +77,6 @@ contract Policy {
   }
 
   function cancel() public onlyOwner onlyOngoing {
-    // if (now > _policy.endTime) {
-    //   _status = Status.Finished;
-
-    //   emit PolicyFinished(msg.sender);
-    // } else {
-    // }
     _status = Status.Cancelled;
 
     emit PolicyCancelled(msg.sender);
@@ -87,19 +85,14 @@ contract Policy {
   function payPremium() external payable onlyOwner onlyOngoing {
     _policy.timeOfNextPayement += 2629800000; // one month in ms
 
-    _fund.payPremium.value(msg.value)();
+    fund.payPremium.value(msg.value)();
 
     emit PremiumPaid(owner, msg.value, _policy.timeOfNextPayement);
   }
 
   function reportInsuredEvent() external onlyOwner onlyOngoing {
-    // if (now > _policy.endTime) {
-    //   _status = Status.Finished;
-    //   emit PolicyFinished(owner);
-    // } else {
-    // }
     _status = Status.InsuredEvent;
 
-    _fund.payCompensation(owner, _policy.compensation);
+    fund.payCompensation(owner, _policy.compensation);
   }
 }

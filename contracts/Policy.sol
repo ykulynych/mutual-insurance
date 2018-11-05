@@ -55,6 +55,9 @@ contract Policy {
 
     owner = owner_;
     ownerContract = ownerContract_;
+    _status = Status.Ongoing;
+    fund = fund_;
+
     _policy = PolicyInfo({
       startTime: startTime_,
       endTime: endTime_,
@@ -62,8 +65,8 @@ contract Policy {
       compensation: compensation_,
       timeOfNextPayement: startTime_
     });
-    _status = Status.Ongoing;
-    fund = fund_;
+
+    fund_.registerPolicy(owner_, address(this));
   }
 
   function getPolicyInfo() public view onlyOwner returns(
@@ -79,6 +82,8 @@ contract Policy {
   function cancel() public onlyOwner onlyOngoing {
     _status = Status.Cancelled;
 
+    fund.removePolicyHolder();
+
     emit PolicyCancelled(msg.sender);
   }
 
@@ -93,6 +98,6 @@ contract Policy {
   function reportInsuredEvent() external onlyOwner onlyOngoing {
     _status = Status.InsuredEvent;
 
-    fund.payCompensation(owner, _policy.compensation);
+    fund.payCompensation(_policy.compensation);
   }
 }

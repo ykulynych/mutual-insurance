@@ -13,7 +13,7 @@ contract UserRegistry {
     fund = fund_;
   }
 
-  function me() external view returns (User) {
+  function me() public view returns (User) {
     return users[msg.sender];
   }
 

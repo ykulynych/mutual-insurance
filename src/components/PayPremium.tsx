@@ -49,7 +49,7 @@ class Component extends React.Component<Props> {
     const { classes, premium } = this.props
     return (
       <div>
-        <Button color='primary' variant='raised' onClick={this.handleClickOpen}>Заплатити внесок</Button>
+        <Button color='primary' variant='text' onClick={this.handleClickOpen}>Заплатити внесок</Button>
         <Dialog
           open={this.state.open}
           onClose={this.cancel}

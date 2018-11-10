@@ -31,6 +31,6 @@ export function calculateMonthPremium(
   const gender = uaGender === UaGender.Чоловік ? 'man' : 'woman'
   const probability = calculateProbabilityOfInsuredEvent(gender, duration, age, city)
   const premium = calculatePremium(compensation, probability)
-  const monthPremium = premium / (duration * 12)
+  const monthPremium = premium / (duration * 12 - 1)
   return monthPremium
 }

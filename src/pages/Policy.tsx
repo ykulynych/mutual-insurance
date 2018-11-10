@@ -55,10 +55,10 @@ const Component = withStyles(styles)<Props>(({ policy, cancelPolicy, reportEvent
     </CardContent>
     <CardActions>
       <PayPremium />
-      <Button size='medium' color='secondary' variant='outlined' onClick={() => cancelPolicy()}>
+      <Button size='medium' color='primary' variant='text' onClick={() => cancelPolicy()}>
         Відмінити поліс
       </Button>
-      <Button size='medium' color='primary' variant='outlined' onClick={() => reportEvent()}>
+      <Button size='medium' color='primary' variant='text' onClick={() => reportEvent()}>
         Повідомити про страховий випадок
       </Button>
     </CardActions>

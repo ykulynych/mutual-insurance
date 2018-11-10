@@ -59,7 +59,7 @@ const Component = withStyles(styles)<Props>(({ user, updateProfile, withdraw, cl
       />
       {!user.hasPolicy && <CreatePolicy />}
       {user.canWithdraw &&
-        <Button onClick={() => withdraw()}  color='secondary' variant='outlined'>
+        <Button onClick={() => withdraw()}  color='secondary' variant='text'>
           Отримати компенсацію
         </Button>
       }

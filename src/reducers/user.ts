@@ -6,10 +6,10 @@ const initState = (): User => ({
   isRegistered: false,
   hasPolicy: false,
   canWithdraw: false,
-  name: '',
-  birthDate: '',
-  city: City.Львівська,
-  gender: UaGender.Чоловік
+  name: 'Ваше ім`я',
+  birthDate: new Date().toISOString().slice(0, 10),
+  city: City[0] as any,
+  gender: UaGender[0] as any
 })
 
 export const user = reducerWithInitialState<User>(

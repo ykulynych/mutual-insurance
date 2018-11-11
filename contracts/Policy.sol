@@ -8,7 +8,8 @@ contract Policy {
     Ongoing,
     Cancelled,
     InsuredEvent,
-    Finished
+    Finished,
+    Overdue
   }
 
   struct PolicyInfo {
@@ -29,6 +30,7 @@ contract Policy {
   event InsuredEvent(address owner, uint compensation);
   event PolicyCancelled(address owner);
   event PolicyFinished(address owner);
+  event PolicyOverdue(address owner);
   event PremiumPaid(address owner, uint premium, uint timeOfNextPayement);
 
   modifier onlyOwner() {
@@ -77,6 +79,24 @@ contract Policy {
     uint timeOfNextPayement
   ) {
     return(_policy.startTime, _policy.endTime, _policy.premium, _policy.compensation, _policy.timeOfNextPayement);
+  }
+
+  function checkIsStillOngoing(uint currentTime) public onlyOwner onlyOngoing returns(bool) {
+    if (currentTime >= _policy.endTime) {
+      _status = Status.Finished;
+
+      emit PolicyFinished(owner);
+
+      return(false);
+    } else if (currentTime > _policy.timeOfNextPayement + 7889400000) { // if overdue more than 3 month
+      _status = Status.Overdue;
+
+      emit PolicyOverdue(owner);
+
+      return(false);
+    }
+
+    return(true);
   }
 
   function cancel() public onlyOwner onlyOngoing {

@@ -31,7 +31,7 @@ export enum UaGender {
 
 export interface Profile {
   name: string
-  birthDate: string,
+  birthDate: string
   city: City
   gender: UaGender
 }

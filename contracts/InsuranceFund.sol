@@ -54,11 +54,21 @@ contract InsuranceFund {
   function payCompensation(uint compensation) public onlyPolicyHolder {
     address user = policyHolders[msg.sender];
 
-    fund -= compensation;
-    compensationsPaid += compensation;
-    pendingReturns[user] += compensation;
+    if (compensation <= fund) {
+      fund -= compensation;
+      compensationsPaid += compensation;
+      pendingReturns[user] += compensation;
 
-    emit CompensationPaid(user, compensation);
+      emit CompensationPaid(user, compensation);
+    } else { // maybe should use logic with debts 
+      uint tmp = fund;
+
+      fund = 0;
+      compensationsPaid += tmp;
+      pendingReturns[user] += tmp;
+
+      emit CompensationPaid(user, tmp);
+    }
   }
 
   function payPremium() public payable onlyPolicyHolder {

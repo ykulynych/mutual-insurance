@@ -75,9 +75,11 @@ function* initPolicy(): IterableIterator<Effect> {
 function* payPremium({ payload }: Action<number>): IterableIterator<Effect> {
   const account = yield select<any>(state => state.accounts[0])
   const drizzle = yield getContext('drizzle')
-  drizzle.contracts.User.methods.payPremium().send({
-    from: account,
-    value: drizzle.web3.utils.toWei(payload.toString(), 'ether')}
+  drizzle.contracts.User.methods.payPremium(Date.now()).send(
+    {
+      from: account,
+      value: drizzle.web3.utils.toWei(payload.toString(), 'ether')
+    }
   )
 }
 
@@ -108,7 +110,7 @@ function* submitCancelledPolicy(): IterableIterator<Effect> {
 // Report insurance event
 function* reportEvent(): IterableIterator<Effect> {
   const drizzle = yield getContext('drizzle')
-  drizzle.contracts.User.methods.reportInsuredEvent().send()
+  drizzle.contracts.User.methods.reportInsuredEvent(Date.now()).send()
 }
 
 // Check if compensation paid

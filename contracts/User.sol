@@ -32,6 +32,16 @@ contract User {
     _;
   }
 
+  modifier proceedPolicyStatus(uint currentTime) {
+    bool isStillOngoing = _policy.checkIsStillOngoing(currentTime);
+
+    if (!isStillOngoing) {
+      delete _policy;
+    } else {
+      _;
+    }
+  }
+
   constructor(
     address owner_,
     InsuranceFund fund_,
@@ -111,11 +121,11 @@ contract User {
     tmp.cancel();
   }
 
-  function payPremium() external payable onlyOwner havePolicy {
+  function payPremium(uint currentTime) external payable onlyOwner havePolicy proceedPolicyStatus(currentTime) {
     _policy.payPremium.value(msg.value)();
   }
 
-  function reportInsuredEvent() external onlyOwner havePolicy {
+  function reportInsuredEvent(uint currentTime) external onlyOwner havePolicy proceedPolicyStatus(currentTime) {
     Policy tmp = _policy;
 
     delete _policy;
